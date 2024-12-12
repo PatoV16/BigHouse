@@ -7,6 +7,7 @@ import RegistrarFichaMedica from "./pages/employees/medic/RegisterNewFicha";
 import DashboardTrabajadorSocial from "./pages/employees/SocialWorker/DashboardSocialWorkerScreen";
 import RegistrarFichaSocial from "./pages/employees/SocialWorker/RegistrarFichaSocial";
 import DashboardPsicology from "./pages/employees/psicology/DashboardPsicology";
+import DashboardAdmin from "./pages/employees/admin/DashboardAdmin";
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/DashboardSocialWorker" element={<DashboardTrabajadorSocial/>}/>
         <Route path="/RegistrarFichaSocial" element={<RegistrarFichaSocial />} />
         <Route path="/DashboardPsicology" element={<DashboardPsicology />} />
+        <Route path="/DashboardAdmin" element={<DashboardAdmin/>}/>
 
       </Routes>
     </Router>

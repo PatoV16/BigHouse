@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useForm } from 'react-hook-form';
 
 const BarthelScale = () => {
-  const [formData, setFormData] = useState({
-    comer: 0, traslado: 0, aseoPersonal: 0, usoRetrete: 0, 
-    bañarse: 0, desplazarse: 0, subirEscaleras: 0, vestirse: 0, 
+  const { register, handleSubmit, watch } = useForm({ defaultValues: {
+    comer: 0, traslado: 0, aseoPersonal: 0, usoRetrete: 0,
+    banarse: 0, desplazarse: 0, subirEscaleras: 0, vestirse: 0,
     controlHeces: 0, controlOrina: 0
-  });
+  }});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
-  };
-
-  const calculateTotal = () => {
-    return Object.values(formData).reduce((a, b) => a + b, 0);
-  };
+  const formData = watch();
+  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
 
   const barthelOptions = [
     { value: 0, label: 'Dependencia Total' },
@@ -26,65 +20,37 @@ const BarthelScale = () => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Escala de Barthel (Valoración de Dependencia)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
-          {[
-            { name: 'comer', label: 'Comer' },
-            { name: 'traslado', label: 'Traslado Silla/Cama' },
-            { name: 'aseoPersonal', label: 'Aseo Personal' },
-            { name: 'usoRetrete', label: 'Uso del Retrete' },
-            { name: 'bañarse', label: 'Bañarse' },
-            { name: 'desplazarse', label: 'Desplazamiento' },
-            { name: 'subirEscaleras', label: 'Subir Escaleras' },
-            { name: 'vestirse', label: 'Vestirse' },
-            { name: 'controlHeces', label: 'Control de Heces' },
-            { name: 'controlOrina', label: 'Control de Orina' }
-          ].map((item) => (
-            <div key={item.name} className="mb-4">
-              <label className="block mb-2">{item.label}</label>
-              <select 
-                name={item.name}
-                value={formData[item.name]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                {barthelOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-          
-          <div className="mt-4 font-bold">
-            Puntaje Total: {calculateTotal()} / 100
+    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
+      <h3 className="text-xl font-semibold mb-4 text-gray-800">Escala de Barthel (Valoración de Dependencia)</h3>
+      <form>
+        {["comer", "traslado", "aseoPersonal", "usoRetrete", "banarse", "desplazarse", "subirEscaleras", "vestirse", "controlHeces", "controlOrina"].map((field) => (
+          <div key={field} className="mb-4">
+            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
+            <select 
+              {...register(field)}
+              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+            >
+              {barthelOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        ))}
+        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 100</div>
+      </form>
+    </div>
   );
 };
 
 const LawtonBrodyScale = () => {
-  const [formData, setFormData] = useState({
-    usoTelefono: 0, hacerCompras: 0, prepararComida: 0, 
-    cuidadoCasa: 0, lavadoRopa: 0, usoTransporte: 0, 
+  const { register, handleSubmit, watch } = useForm({ defaultValues: {
+    usoTelefono: 0, hacerCompras: 0, prepararComida: 0,
+    cuidadoCasa: 0, lavadoRopa: 0, usoTransporte: 0,
     responsabilidadMedicacion: 0, capacidadDinero: 0
-  });
+  }});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
-  };
-
-  const calculateTotal = () => {
-    return Object.values(formData).reduce((a, b) => a + b, 0);
-  };
+  const formData = watch();
+  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
 
   const lawtonOptions = [
     { value: 0, label: 'Dependencia Total' },
@@ -94,64 +60,38 @@ const LawtonBrodyScale = () => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Escala de Lawton y Brody (Actividades Instrumentales)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
-          {[
-            { name: 'usoTelefono', label: 'Uso de Teléfono' },
-            { name: 'hacerCompras', label: 'Hacer Compras' },
-            { name: 'prepararComida', label: 'Preparar Comida' },
-            { name: 'cuidadoCasa', label: 'Cuidado de Casa' },
-            { name: 'lavadoRopa', label: 'Lavado de Ropa' },
-            { name: 'usoTransporte', label: 'Uso de Transporte' },
-            { name: 'responsabilidadMedicacion', label: 'Responsabilidad Medicación' },
-            { name: 'capacidadDinero', label: 'Capacidad de Manejar Dinero' }
-          ].map((item) => (
-            <div key={item.name} className="mb-4">
-              <label className="block mb-2">{item.label}</label>
-              <select 
-                name={item.name}
-                value={formData[item.name]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                {lawtonOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-          
-          <div className="mt-4 font-bold">
-            Puntaje Total: {calculateTotal()} / 24
+    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
+      <h3 className="text-xl font-semibold mb-4 text-gray-800">Escala de Lawton y Brody (Actividades Instrumentales)</h3>
+      <form>
+        {["usoTelefono", "hacerCompras", "prepararComida", "cuidadoCasa", "lavadoRopa", "usoTransporte", "responsabilidadMedicacion", "capacidadDinero"].map((field) => (
+          <div key={field} className="mb-4">
+            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
+            <select 
+              {...register(field)}
+              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+            >
+              {lawtonOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        ))}
+        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 24</div>
+      </form>
+    </div>
   );
 };
 
 const MiniMentalExam = () => {
-  const [formData, setFormData] = useState({
-    orientacionTiempo: 0, orientacionEspacio: 0, memoria: 0, 
-    atencionCalculo: 0, memoriadiferida: 0, denominacion: 0, 
-    repeticionFrase: 0, comprensionEjecucion: 0, lectura: 0, 
+  const { register, handleSubmit, watch } = useForm({ defaultValues: {
+    orientacionTiempo: 0, orientacionEspacio: 0, memoria: 0,
+    atencionCalculo: 0, memoriaDiferida: 0, denominacion: 0,
+    repeticionFrase: 0, comprensionEjecucion: 0, lectura: 0,
     escritura: 0, copiaDibujo: 0
-  });
+  }});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
-  };
-
-  const calculateTotal = () => {
-    return Object.values(formData).reduce((a, b) => a + b, 0);
-  };
+  const formData = watch();
+  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
 
   const mentalExamOptions = [
     { value: 0, label: 'Incorrecto/No realizado' },
@@ -159,107 +99,59 @@ const MiniMentalExam = () => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Mini Examen del Estado Mental (MMSE)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
-          {[
-            { name: 'orientacionTiempo', label: 'Orientación en Tiempo' },
-            { name: 'orientacionEspacio', label: 'Orientación en Espacio' },
-            { name: 'memoria', label: 'Memoria Inmediata' },
-            { name: 'atencionCalculo', label: 'Atención y Cálculo' },
-            { name: 'memoriadiferida', label: 'Memoria Diferida' },
-            { name: 'denominacion', label: 'Denominación' },
-            { name: 'repeticionFrase', label: 'Repetición de Frase' },
-            { name: 'comprensionEjecucion', label: 'Comprensión y Ejecución' },
-            { name: 'lectura', label: 'Lectura' },
-            { name: 'escritura', label: 'Escritura' },
-            { name: 'copiaDibujo', label: 'Copia de Dibujo' }
-          ].map((item) => (
-            <div key={item.name} className="mb-4">
-              <label className="block mb-2">{item.label}</label>
-              <select 
-                name={item.name}
-                value={formData[item.name]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                {mentalExamOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-          
-          <div className="mt-4 font-bold">
-            Puntaje Total: {calculateTotal()} / 11
+    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
+      <h3 className="text-xl font-semibold mb-4 text-gray-800">Mini Examen del Estado Mental (MMSE)</h3>
+      <form>
+        {["orientacionTiempo", "orientacionEspacio", "memoria", "atencionCalculo", "memoriaDiferida", "denominacion", "repeticionFrase", "comprensionEjecucion", "lectura", "escritura", "copiaDibujo"].map((field) => (
+          <div key={field} className="mb-4">
+            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
+            <select 
+              {...register(field)}
+              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+            >
+              {mentalExamOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        ))}
+        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 11</div>
+      </form>
+    </div>
   );
 };
 
 const GerontologicalDashboard = () => {
   const [activeScale, setActiveScale] = useState('barthel');
 
-  const renderScale = () => {
-    switch(activeScale) {
-      case 'barthel':
-        return <BarthelScale />;
-      case 'lawtonBrody':
-        return <LawtonBrodyScale />;
-      case 'miniMental':
-        return <MiniMentalExam />;
-      default:
-        return <BarthelScale />;
-    }
-  };
-
   return (
-    <div className="dashboard-container p-6">
-      <h2 className="text-2xl font-bold mb-6">Dashboard Psicólogo Gerontológico</h2>
-      
-      <div className="flex mb-6">
+    <div className="dashboard-container bg-white p-8 min-h-screen">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Dashboard Psicólogo Gerontológico</h2>
+      <div className="flex justify-center space-x-4 mb-8">
         <button 
-          className={`mr-4 p-2 rounded ${activeScale === 'barthel' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'barthel' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           onClick={() => setActiveScale('barthel')}
         >
           Escala de Barthel
         </button>
         <button 
-          className={`mr-4 p-2 rounded ${activeScale === 'lawtonBrody' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'lawtonBrody' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           onClick={() => setActiveScale('lawtonBrody')}
         >
           Escala Lawton y Brody
         </button>
         <button 
-          className={`p-2 rounded ${activeScale === 'miniMental' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'miniMental' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           onClick={() => setActiveScale('miniMental')}
         >
           Mini Examen Mental
         </button>
       </div>
-
-      {renderScale()}
-
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Notas e Interpretación</CardTitle>
-        </CardHeader>
-        <div className="p-4">
-          <p>Interprete los resultados de las escalas de evaluación para determinar el nivel de dependencia y estado cognitivo del paciente.</p>
-          <ul className="list-disc ml-6 mt-2">
-            <li>Barthel: 0-20 puntos indica dependencia total</li>
-            <li>Lawton y Brody: 0-8 puntos refleja dependencia instrumental</li>
-            <li>Mini Mental: 0-11 puntos sugiere deterioro cognitivo</li>
-          </ul>
-        </div>
-      </Card>
+      <div className="flex justify-center">
+        {activeScale === 'barthel' && <BarthelScale />}
+        {activeScale === 'lawtonBrody' && <LawtonBrodyScale />}
+        {activeScale === 'miniMental' && <MiniMentalExam />}
+      </div>
     </div>
   );
 };
