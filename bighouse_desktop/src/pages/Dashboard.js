@@ -31,6 +31,9 @@ const Sidebar = () => (
         <ListItem button component={Link} to="/DashboardSocialWorker">
           <ListItemText primary="Trabajador Social" />
         </ListItem>
+        <ListItem button component={Link} to="/DashboardPsicology">
+          <ListItemText primary="DashboardPsicology" />
+        </ListItem>
       </List>
     </Box>
   </Drawer>
@@ -59,6 +62,7 @@ const DashboardScreen = () => (
         <Route path="/registerEmployees" element={<div>Registrar Usuarios</div>} />
         <Route path="/DashboardMedicScreen" element={<div>Médico</div>} />
         <Route path="/DashboardSocialWorker" element={<div>Trabajador Social</div>} />
+        <Route path="/DashboardPsicology" element={<div>Psicólogo</div>} />
       </Routes>
     </Box>
   </Box>
