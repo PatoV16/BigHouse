@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import './DoctorDashboardStyle.css'; // Asegúrate de importar el archivo CSS
-import RegistrarFichaMedica from './RegisterNewFicha';// Importa el formulario de la ficha médica
+import RegistrarFichaMedica from './RegisterNewFicha'; // Importa el formulario de la ficha médica
 
 const DoctorDashboard = () => {
   const [activeSection, setActiveSection] = useState('avisos');
-  
+
   const handleSectionChange = (section) => {
     setActiveSection(section);
+  };
+
+  const handleLogout = () => {
+    // Aquí iría la lógica de cierre de sesión, por ejemplo redirigir al login
+    console.log('Logout');
+    // Redirigir a la página de login o cerrar sesión
   };
 
   return (
@@ -16,7 +22,9 @@ const DoctorDashboard = () => {
         <ul className="sidebar-menu">
           <li onClick={() => handleSectionChange('avisos')}>Avisos</li>
           <li onClick={() => handleSectionChange('registrarFicha')}>Registrar Ficha</li>
+          <li onClick={() => handleSectionChange('verFichasMedicas')}>Ver Fichas Médicas</li> {/* Nuevo botón */}
           <li onClick={() => handleSectionChange('editarUsuario')}>Editar Usuario</li>
+          <li onClick={handleLogout}>Logout</li> {/* Nuevo botón */}
         </ul>
       </div>
 
@@ -41,6 +49,14 @@ const DoctorDashboard = () => {
           <div className="registrar-ficha-section">
             <h3>Registrar Nueva Ficha Médica</h3>
             <RegistrarFichaMedica /> {/* Aquí integras el formulario de ficha médica */}
+          </div>
+        )}
+
+        {activeSection === 'verFichasMedicas' && (
+          <div className="ver-fichas-medicas-section">
+            <h3>Ver Fichas Médicas</h3>
+            {/* Aquí puedes incluir la lógica para mostrar las fichas médicas, como un listado o un componente para visualizarlas */}
+            <p>Listado de fichas médicas de pacientes</p>
           </div>
         )}
 
@@ -70,3 +86,4 @@ const DoctorDashboard = () => {
 };
 
 export default DoctorDashboard;
+

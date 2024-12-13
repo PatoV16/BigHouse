@@ -17,6 +17,14 @@ const DashboardAdmin = () => {
     navigate("/edit-profile");
   };
 
+  const handlePatientList = () => {
+    navigate("/patient-list");
+  };
+
+  const handleAttendance = () => {
+    navigate("/attendance");
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Panel de Administración</h1>
@@ -34,6 +42,16 @@ const DashboardAdmin = () => {
         <div style={styles.card} onClick={handleEditProfile}>
           <h2 style={styles.cardTitle}>Editar Perfil</h2>
           <p style={styles.cardDescription}>Actualiza la información de tu perfil.</p>
+        </div>
+
+        <div style={styles.card} onClick={handlePatientList}>
+          <h2 style={styles.cardTitle}>Lista de Pacientes</h2>
+          <p style={styles.cardDescription}>Consulta y gestiona la lista de pacientes registrados.</p>
+        </div>
+
+        <div style={styles.card} onClick={handleAttendance}>
+          <h2 style={styles.cardTitle}>Asistencia</h2>
+          <p style={styles.cardDescription}>Administra y registra la asistencia de los usuarios.</p>
         </div>
       </div>
     </div>

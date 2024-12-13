@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import {
+  Paper,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Grid
+} from '@mui/material';
 
 const MiniMentalExam = () => {
   const [formData, setFormData] = useState({
@@ -18,9 +27,9 @@ const MiniMentalExam = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: parseInt(value)
+      [name]: parseInt(value, 10)
     }));
   };
 
@@ -34,12 +43,12 @@ const MiniMentalExam = () => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Mini Examen del Estado Mental (MMSE)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
+    <Paper elevation={3} sx={{ p: 3, maxWidth: 600, margin: 'auto' }}>
+      <Typography variant="h5" component="h1" gutterBottom>
+        Mini Examen del Estado Mental (MMSE)
+      </Typography>
+      <form>
+        <Grid container spacing={2}>
           {[
             { name: 'orientacionTiempo', label: 'Orientación en Tiempo' },
             { name: 'orientacionEspacio', label: 'Orientación en Espacio' },
@@ -53,29 +62,31 @@ const MiniMentalExam = () => {
             { name: 'escritura', label: 'Escritura' },
             { name: 'copiaDibujo', label: 'Copia de Dibujo' }
           ].map((item) => (
-            <div key={item.name} className="mb-4">
-              <label className="block mb-2">{item.label}</label>
-              <select 
-                name={item.name}
-                value={formData[item.name]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                {mentalExamOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Grid item xs={12} key={item.name}>
+              <FormControl fullWidth>
+                <InputLabel>{item.label}</InputLabel>
+                <Select
+                  name={item.name}
+                  value={formData[item.name]}
+                  onChange={handleChange}
+                >
+                  {mentalExamOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           ))}
-          
-          <div className="mt-4 font-bold">
+        </Grid>
+        <Box mt={3}>
+          <Typography variant="h6" fontWeight="bold">
             Puntaje Total: {calculateTotal()} / 11
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          </Typography>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 

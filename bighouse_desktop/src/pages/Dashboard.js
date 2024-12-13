@@ -32,10 +32,10 @@ const Sidebar = () => (
           <ListItemText primary="Trabajador Social" />
         </ListItem>
         <ListItem button component={Link} to="/DashboardPsicology">
-          <ListItemText primary="DashboardPsicology" />
+          <ListItemText primary="Psicólogo" />
         </ListItem>
         <ListItem button component={Link} to="/DashboardAdmin">
-          <ListItemText primary="DashboardAdmin" />
+          <ListItemText primary="Administrador" />
         </ListItem>
       </List>
     </Box>

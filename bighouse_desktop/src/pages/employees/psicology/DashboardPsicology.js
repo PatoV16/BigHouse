@@ -1,156 +1,138 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
-const BarthelScale = () => {
-  const { register, handleSubmit, watch } = useForm({ defaultValues: {
-    comer: 0, traslado: 0, aseoPersonal: 0, usoRetrete: 0,
-    banarse: 0, desplazarse: 0, subirEscaleras: 0, vestirse: 0,
-    controlHeces: 0, controlOrina: 0
-  }});
-
-  const formData = watch();
-  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-  const barthelOptions = [
-    { value: 0, label: 'Dependencia Total' },
-    { value: 5, label: 'Dependencia Severa' },
-    { value: 10, label: 'Dependencia Moderada' },
-    { value: 15, label: 'Dependencia Leve' },
-    { value: 20, label: 'Independencia' }
-  ];
-
-  return (
-    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Escala de Barthel (Valoración de Dependencia)</h3>
-      <form>
-        {["comer", "traslado", "aseoPersonal", "usoRetrete", "banarse", "desplazarse", "subirEscaleras", "vestirse", "controlHeces", "controlOrina"].map((field) => (
-          <div key={field} className="mb-4">
-            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
-            <select 
-              {...register(field)}
-              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-            >
-              {barthelOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-        ))}
-        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 100</div>
-      </form>
-    </div>
-  );
-};
-
-const LawtonBrodyScale = () => {
-  const { register, handleSubmit, watch } = useForm({ defaultValues: {
-    usoTelefono: 0, hacerCompras: 0, prepararComida: 0,
-    cuidadoCasa: 0, lavadoRopa: 0, usoTransporte: 0,
-    responsabilidadMedicacion: 0, capacidadDinero: 0
-  }});
-
-  const formData = watch();
-  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-  const lawtonOptions = [
-    { value: 0, label: 'Dependencia Total' },
-    { value: 1, label: 'Dependencia Severa' },
-    { value: 2, label: 'Dependencia Moderada' },
-    { value: 3, label: 'Independencia' }
-  ];
-
-  return (
-    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Escala de Lawton y Brody (Actividades Instrumentales)</h3>
-      <form>
-        {["usoTelefono", "hacerCompras", "prepararComida", "cuidadoCasa", "lavadoRopa", "usoTransporte", "responsabilidadMedicacion", "capacidadDinero"].map((field) => (
-          <div key={field} className="mb-4">
-            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
-            <select 
-              {...register(field)}
-              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-            >
-              {lawtonOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-        ))}
-        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 24</div>
-      </form>
-    </div>
-  );
-};
-
-const MiniMentalExam = () => {
-  const { register, handleSubmit, watch } = useForm({ defaultValues: {
-    orientacionTiempo: 0, orientacionEspacio: 0, memoria: 0,
-    atencionCalculo: 0, memoriaDiferida: 0, denominacion: 0,
-    repeticionFrase: 0, comprensionEjecucion: 0, lectura: 0,
-    escritura: 0, copiaDibujo: 0
-  }});
-
-  const formData = watch();
-  const calculateTotal = () => Object.values(formData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-  const mentalExamOptions = [
-    { value: 0, label: 'Incorrecto/No realizado' },
-    { value: 1, label: 'Correcto/Realizado' }
-  ];
-
-  return (
-    <div className="w-full max-w-2xl bg-gray-50 border border-gray-200 p-6 rounded-lg shadow">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Mini Examen del Estado Mental (MMSE)</h3>
-      <form>
-        {["orientacionTiempo", "orientacionEspacio", "memoria", "atencionCalculo", "memoriaDiferida", "denominacion", "repeticionFrase", "comprensionEjecucion", "lectura", "escritura", "copiaDibujo"].map((field) => (
-          <div key={field} className="mb-4">
-            <label className="block mb-2 text-gray-700 capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
-            <select 
-              {...register(field)}
-              className="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-            >
-              {mentalExamOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-        ))}
-        <div className="mt-4 text-lg font-bold text-gray-700">Puntaje Total: {calculateTotal()} / 11</div>
-      </form>
-    </div>
-  );
-};
+import { useNavigate } from 'react-router-dom';  // Importa useNavigate
+import './GerontologicalDashboardStyle.css'; // Archivo CSS para estilos específicos
+import BarthelScale from './BarthelScale'; // Componente Escala de Barthel
+import Ficha2 from './LawtonBrodyTest'; // Componente Ficha 2 (supuesto)
+import Ficha3 from './MinimentalTest'; // Componente Ficha 3 (supuesto)
 
 const GerontologicalDashboard = () => {
-  const [activeScale, setActiveScale] = useState('barthel');
+  const [activeSection, setActiveSection] = useState('avisos');
+  const [activeFicha, setActiveFicha] = useState('barthel'); // Sección activa de la ficha
+  const navigate = useNavigate(); // Inicializa useNavigate
+
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+  };
+
+  const handleFichaChange = (ficha) => {
+    setActiveFicha(ficha); // Cambia entre las fichas
+  };
+
+  const handleLogout = () => {
+    // Aquí puedes agregar la lógica de logout, como eliminar el token y redirigir
+    console.log('Logout');
+    navigate('/login'); // Redirige al login
+  };
 
   return (
-    <div className="dashboard-container bg-white p-8 min-h-screen">
-      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Dashboard Psicólogo Gerontológico</h2>
-      <div className="flex justify-center space-x-4 mb-8">
-        <button 
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'barthel' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-          onClick={() => setActiveScale('barthel')}
-        >
-          Escala de Barthel
-        </button>
-        <button 
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'lawtonBrody' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-          onClick={() => setActiveScale('lawtonBrody')}
-        >
-          Escala Lawton y Brody
-        </button>
-        <button 
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${activeScale === 'miniMental' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-          onClick={() => setActiveScale('miniMental')}
-        >
-          Mini Examen Mental
-        </button>
+    <div className="dashboard-container">
+      <div className="sidebar">
+        <h2 className="logo">Dashboard Gerontológico</h2>
+        <ul className="sidebar-menu">
+          <li 
+            className={activeSection === 'avisos' ? 'active' : ''} 
+            onClick={() => handleSectionChange('avisos')}
+          >
+            Avisos
+          </li>
+          <li 
+            className={activeSection === 'registrarFicha' ? 'active' : ''} 
+            onClick={() => handleSectionChange('registrarFicha')}
+          >
+            Registrar Ficha
+          </li>
+          <li 
+            className={activeSection === 'editarUsuario' ? 'active' : ''} 
+            onClick={() => handleSectionChange('editarUsuario')}
+          >
+            Editar Perfil
+          </li>
+          <li 
+            className={activeSection === 'verFichasSociales' ? 'active' : ''} 
+            onClick={() => handleSectionChange('verFichasSociales')}
+          >
+            Ver Fichas Psicológicas {/* Nuevo botón */}
+          </li>
+          <li onClick={handleLogout}>Logout</li> {/* Nuevo botón */}
+        </ul>
       </div>
-      <div className="flex justify-center">
-        {activeScale === 'barthel' && <BarthelScale />}
-        {activeScale === 'lawtonBrody' && <LawtonBrodyScale />}
-        {activeScale === 'miniMental' && <MiniMentalExam />}
+
+      <div className="main-content">
+        {activeSection === 'avisos' && (
+          <div className="avisos-section">
+            <h3>Avisos</h3>
+            <div className="avisos-list">
+              <div className="aviso">
+                <h4>Aviso 1</h4>
+                <p>Recordatorio: Actualiza los datos de los pacientes.</p>
+              </div>
+              <div className="aviso">
+                <h4>Aviso 2</h4>
+                <p>Nuevo paciente registrado. Verifica su ficha médica.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeSection === 'registrarFicha' && (
+          <div className="registrar-ficha-section">
+            <h3>Registrar Nueva Ficha Médica</h3>
+
+            <div className="ficha-tabs">
+              <button 
+                className={activeFicha === 'barthel' ? 'active' : ''} 
+                onClick={() => handleFichaChange('barthel')}
+              >
+                Escala de Barthel
+              </button>
+              <button 
+                className={activeFicha === 'ficha2' ? 'active' : ''} 
+                onClick={() => handleFichaChange('ficha2')}
+              >
+                Escala de LawtonBrody
+              </button>
+              <button 
+                className={activeFicha === 'ficha3' ? 'active' : ''} 
+                onClick={() => handleFichaChange('ficha3')}
+              >
+                MiniMentalExam
+              </button>
+            </div>
+
+            {activeFicha === 'barthel' && <BarthelScale />}
+            {activeFicha === 'ficha2' && <Ficha2 />}
+            {activeFicha === 'ficha3' && <Ficha3 />}
+          </div>
+        )}
+
+        {activeSection === 'verFichasSociales' && (
+          <div className="ver-fichas-sociales-section">
+            <h3>Ver Fichas Sociales</h3>
+            {/* Aquí puedes incluir la lógica para mostrar las fichas sociales */}
+            <p>Listado de fichas sociales de pacientes</p>
+          </div>
+        )}
+
+        {activeSection === 'editarUsuario' && (
+          <div className="editar-usuario-section">
+            <h3>Editar Perfil</h3>
+            <form>
+              <div className="form-group">
+                <label htmlFor="nombreUsuario">Nombre Completo</label>
+                <input type="text" id="nombreUsuario" className="input-field" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="correoUsuario">Correo Electrónico</label>
+                <input type="email" id="correoUsuario" className="input-field" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="telefonoUsuario">Teléfono</label>
+                <input type="text" id="telefonoUsuario" className="input-field" />
+              </div>
+              <button type="submit" className="submit-btn">Guardar Cambios</button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import {
+  Paper,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Grid
+} from '@mui/material';
 
 const BarthelScale = () => {
   const [formData, setFormData] = useState({
@@ -17,9 +26,9 @@ const BarthelScale = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: parseInt(value)
+      [name]: parseInt(value, 10)
     }));
   };
 
@@ -36,12 +45,12 @@ const BarthelScale = () => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle>Escala de Barthel (Valoración de Dependencia)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
+    <Paper elevation={3} sx={{ p: 3, maxWidth: 600, margin: 'auto' }}>
+      <Typography variant="h5" component="h1" gutterBottom>
+        Escala de Barthel (Valoración de Dependencia)
+      </Typography>
+      <form>
+        <Grid container spacing={2}>
           {[
             { name: 'comer', label: 'Comer' },
             { name: 'traslado', label: 'Traslado Silla/Cama' },
@@ -54,29 +63,31 @@ const BarthelScale = () => {
             { name: 'controlHeces', label: 'Control de Heces' },
             { name: 'controlOrina', label: 'Control de Orina' }
           ].map((item) => (
-            <div key={item.name} className="mb-4">
-              <label className="block mb-2">{item.label}</label>
-              <select 
-                name={item.name}
-                value={formData[item.name]}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              >
-                {barthelOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Grid item xs={12} key={item.name}>
+              <FormControl fullWidth>
+                <InputLabel>{item.label}</InputLabel>
+                <Select
+                  name={item.name}
+                  value={formData[item.name]}
+                  onChange={handleChange}
+                >
+                  {barthelOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           ))}
-          
-          <div className="mt-4 font-bold">
+        </Grid>
+        <Box mt={3}>
+          <Typography variant="h6" fontWeight="bold">
             Puntaje Total: {calculateTotal()} / 100
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+          </Typography>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 
