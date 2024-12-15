@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios'; // Importa Axios
 import './RegisterEmployeeStyle.css'; // Asegúrate de que esta ruta sea correcta
 
 const RegisterEmployeeScreen = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();  // Destructura reset
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const onSubmit = async (data) => {
     try {
-      // const response = await axios.post('/api/employees', data);
-      alert('Empleado registrado con éxito');
+      await axios.post('http://localhost:3000/empleados', {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        cargo: data.cargo,
+        fecha_contratacion: data.fechaContratacion,
+        telefono: data.telefono,
+        correo: data.correo,
+        estado: data.estado,
+      });
+
+      setSuccess('Empleado registrado con éxito');
+      setError('');
+      
+      // Resetear el formulario después del registro exitoso
+      reset();
+
     } catch (err) {
+      console.error(err);
+      console.log(err);
       setError('Hubo un error al registrar al empleado.');
+      setSuccess('');
     }
   };
 
@@ -19,7 +38,8 @@ const RegisterEmployeeScreen = () => {
     <div className="register-employee-screen">
       <div className="form-container">
         <h2>Registrar Empleado</h2>
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label htmlFor="nombre">Nombre</label>

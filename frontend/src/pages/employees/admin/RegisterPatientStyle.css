@@ -1,0 +1,132 @@
+/* RegisterPatientStyle.css */
+
+/* Estilo general de la pantalla */
+.register-patient-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+  }
+  
+  /* Contenedor del formulario */
+  .form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  /* Título del formulario */
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Mensajes de éxito y error */
+  .success, .error {
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .success {
+    color: green;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  /* Estilo del formulario */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Estilo de cada grupo de formulario */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Etiquetas de los campos */
+  .form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  /* Campos de entrada */
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+  }
+  
+  .form-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Estilo de los select */
+  form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: border 0.3s ease;
+  }
+  
+  form select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Estilo de los textarea */
+  textarea.form-input {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  /* Mensajes de error debajo de los campos */
+  .error {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+  }
+  
+  /* Botón de envío */
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Asegurar que todo se vea bien en dispositivos pequeños */
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 15px;
+      width: 90%;
+    }
+  }
+  

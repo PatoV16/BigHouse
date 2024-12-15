@@ -6,7 +6,7 @@ const DashboardAdmin = () => {
 
   // Funciones para manejar las acciones
   const handleRegisterPatient = () => {
-    navigate("/registerPatient");
+    navigate("/RegisterPatientScreen");
   };
 
   const handleManageNotices = () => {
@@ -18,7 +18,7 @@ const DashboardAdmin = () => {
   };
 
   const handlePatientList = () => {
-    navigate("/patient-list");
+    navigate("/PacientesList");
   };
 
   const handleAttendance = () => {
