@@ -11,7 +11,7 @@ const RegisterPatientScreen = () => {
   const onSubmit = async (data) => {
     try {
       // Registrar los datos en la consola antes de enviarlos
-      const response = await axios.post('http://localhost:3000/pacientes', {
+        await axios.post('http://localhost:3000/pacientes', {
         nombre: data.nombre,
         apellido: data.apellido,
         fecha_nacimiento: data.fechaNacimiento,

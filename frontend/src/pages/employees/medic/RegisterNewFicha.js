@@ -1,15 +1,41 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './RegisterFichaStyle.css'; // Asegúrate de importar el archivo CSS
+import axios from 'axios'; // Importa axios para realizar las peticiones HTTP
 
-const RegistrarFichaMedica = () => {
+const RegistrarFichaMedica = ({ idPaciente, idEmpleado }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState('');
-
+  idEmpleado = 1;
   const onSubmit = async (data) => {
     try {
-      // Aquí realizarías la llamada a tu API para guardar la ficha médica en la base de datos
-      // const response = await axios.post('/api/fichas-medicas', data);
+      const fichaData = {
+        tipo_ficha: data.tipo_ficha,
+        fecha_creacion: data.fecha_creacion,
+        id_paciente: idPaciente, // Usamos el ID recibido como prop
+        id_empleado: idEmpleado , // Usamos el ID recibido como prop
+
+      };
+
+      const fichaResponse = await axios.post('http://localhost:3000/fichas', fichaData); // API para crear ficha básica
+      const fichaId = fichaResponse.data.id_ficha; // Obtener ID de la ficha creada
+
+      // 2. Crear la ficha médica en la tabla "fichas_medicas" (información médica)
+      const fichaMedicaData = {
+        id_ficha: fichaId, // Asociar la ficha con la ficha médica creada
+        condicion_fisica: data.condicion_fisica,
+        condicion_psicologica: data.condicion_psicologica,
+        estado_salud: data.estado_salud,
+        medicamentos: data.medicamentos,
+        intolerancia_medicamentos: data.intolerancia_medicamentos,
+        referido_por: data.referido_por,
+        vive_con: data.vive_con,
+        relaciones_familiares: data.relaciones_familiares,
+        observaciones: data.observaciones,
+      };
+
+      await axios.post('http://localhost:3000/fichas-medicas', fichaMedicaData); // API para crear ficha médica
+
       alert('Ficha Médica registrada con éxito');
     } catch (err) {
       setError('Hubo un error al registrar la ficha médica.');
@@ -21,7 +47,37 @@ const RegistrarFichaMedica = () => {
       <h2>Registrar Ficha Médica</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit(onSubmit)} className="form-container">
-        
+
+        {/* Información Básica */}
+        <div className="form-group">
+          <label htmlFor="tipoFicha">Tipo de Ficha</label>
+          <select
+            id="tipoFicha"
+            {...register('tipo_ficha', { required: 'El tipo de ficha es obligatorio' })}
+            className="form-input"
+          >
+            <option value="">Seleccione</option>
+            <option value="Médica">Médica</option>
+            <option value="Psicológica">Psicológica</option>
+            <option value="Social">Social</option>
+            <option value="Aceptación">Aceptación</option>
+            <option value="Diaria">Diaria</option>
+          </select>
+          {errors.tipo_ficha && <p className="error">{errors.tipo_ficha.message}</p>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="fechaCreacion">Fecha de Creación</label>
+          <input
+            type="date"
+            id="fechaCreacion"
+            {...register('fecha_creacion', { required: 'La fecha de creación es obligatoria' })}
+            className="form-input"
+          />
+          {errors.fecha_creacion && <p className="error">{errors.fecha_creacion.message}</p>}
+        </div>
+
+        {/* Información Médica */}
         <div className="form-group">
           <label htmlFor="condicionFisica">Condición Física</label>
           <textarea
@@ -76,6 +132,7 @@ const RegistrarFichaMedica = () => {
           {errors.intolerancia_medicamentos && <p className="error">{errors.intolerancia_medicamentos.message}</p>}
         </div>
 
+        {/* Información Social */}
         <div className="form-group">
           <label htmlFor="referidoPor">Referido Por</label>
           <input
@@ -112,6 +169,7 @@ const RegistrarFichaMedica = () => {
           {errors.relaciones_familiares && <p className="error">{errors.relaciones_familiares.message}</p>}
         </div>
 
+        {/* Observaciones */}
         <div className="form-group">
           <label htmlFor="observaciones">Observaciones</label>
           <textarea
