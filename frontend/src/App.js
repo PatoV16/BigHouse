@@ -10,6 +10,7 @@ import DashboardPsicology from "./pages/employees/psicology/DashboardPsicology";
 import DashboardAdmin from "./pages/employees/admin/DashboardAdmin";
 import RegisterPatientScreen from "./pages/employees/admin/RegisterPatientScreen";
 import PacientesList from "./pages/employees/admin/ListaPacientesScreen";
+import LoginForm from "./pages/employees/LoginForm";
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/DashboardAdmin" element={<DashboardAdmin/>}/>
         <Route path="/RegisterPatientScreen" element={<RegisterPatientScreen/>}/>
         <Route path="/PacientesList" element={<PacientesList/>}/>
+        <Route path="/LoginForm" element={<LoginForm/>}/>
         
 
       </Routes>

@@ -10,7 +10,8 @@ const RegisterEmployeeScreen = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post('http://localhost:3000/empleados', {
+      // Registrar empleado y obtener su ID
+      const empleadoResponse = await axios.post('http://localhost:3000/empleados', {
         nombre: data.nombre,
         apellido: data.apellido,
         cargo: data.cargo,
@@ -19,20 +20,28 @@ const RegisterEmployeeScreen = () => {
         correo: data.correo,
         estado: data.estado,
       });
-
-      setSuccess('Empleado registrado con éxito');
+  
+      const idEmpleado = empleadoResponse.data.id_empleado; // Obtén el ID del empleado creado
+  
+      // Registrar usuario asociado al empleado
+      await axios.post('http://localhost:3000/usuarios', {
+        id_empleado: idEmpleado, // Asociar el ID del empleado
+        nombre: data.nombre,
+        apellido: data.apellido,
+        correo: data.correo,
+        contraseña: data.contraseña,
+      });
+  
+      setSuccess('Empleado y usuario registrados con éxito');
       setError('');
-      
-      // Resetear el formulario después del registro exitoso
       reset();
-
     } catch (err) {
       console.error(err);
-      console.log(err);
-      setError('Hubo un error al registrar al empleado.');
+      setError('Hubo un error al registrar al empleado o al usuario.');
       setSuccess('');
     }
   };
+  
 
   return (
     <div className="register-employee-screen">
@@ -138,6 +147,23 @@ const RegisterEmployeeScreen = () => {
             </select>
             {errors.estado && <p className="error">{errors.estado.message}</p>}
           </div>
+<div className="form-group">
+  <label htmlFor="contraseña">Contraseña</label>
+  <input
+    type="password"
+    id="contraseña"
+    {...register('contraseña', { 
+      required: 'La contraseña es obligatoria',
+      minLength: {
+        value: 8,
+        message: 'La contraseña debe tener al menos 8 caracteres',
+      },
+    })}
+    className="form-input"
+  />
+  {errors.contraseña && <p className="error">{errors.contraseña.message}</p>}
+</div>
+
 
           <button type="submit" className="submit-btn">Registrar Empleado</button>
         </form>

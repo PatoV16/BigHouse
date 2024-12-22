@@ -1,25 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';  // Importa useEffect
 import { useNavigate } from 'react-router-dom';  // Importa useNavigate
 import './GerontologicalDashboardStyle.css'; // Archivo CSS para estilos específicos
 import BarthelScale from './BarthelScale'; // Componente Escala de Barthel
 import Ficha2 from './LawtonBrodyTest'; // Componente Ficha 2 (supuesto)
 import Ficha3 from './MinimentalTest'; // Componente Ficha 3 (supuesto)
+import { getPacientes } from '../../../server/pacienteService'; // Importa el servicio de pacientes
 
 const GerontologicalDashboard = () => {
-  const [activeSection, setActiveSection] = useState('avisos');
+  const [activeSection, setActiveSection] = useState('verPacientes'); // Sección activa
   const [activeFicha, setActiveFicha] = useState('barthel'); // Sección activa de la ficha
+  const [pacientes, setPacientes] = useState([]); // Lista de pacientes
+  const [loading, setLoading] = useState(true); // Indicador de carga
+  const [error, setError] = useState(null); // Error al cargar pacientes
+  const [selectedPacienteId, setSelectedPacienteId] = useState(null); // ID del paciente seleccionado
   const navigate = useNavigate(); // Inicializa useNavigate
 
-  const handleSectionChange = (section) => {
+  // Cargar pacientes
+  const fetchPacientes = async () => {
+    try {
+      const data = await getPacientes();
+      setPacientes(data);
+    } catch (err) {
+      console.error('Error al cargar pacientes:', err);
+      setError('Error al cargar pacientes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Llamar a fetchPacientes cuando el componente se monte
+  useEffect(() => {
+    fetchPacientes();
+  }, []); // El segundo parámetro vacío asegura que se ejecute solo una vez al montar el componente
+
+  // Cambiar la sección activa
+  const handleSectionChange = (section, pacienteId = null) => {
     setActiveSection(section);
+    if (pacienteId) setSelectedPacienteId(pacienteId);
   };
 
+  // Cambiar la ficha activa
   const handleFichaChange = (ficha) => {
-    setActiveFicha(ficha); // Cambia entre las fichas
+    setActiveFicha(ficha);
   };
 
+  // Cerrar sesión
   const handleLogout = () => {
-    // Aquí puedes agregar la lógica de logout, como eliminar el token y redirigir
     console.log('Logout');
     navigate('/login'); // Redirige al login
   };
@@ -27,33 +53,11 @@ const GerontologicalDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <h2 className="logo">Dashboard Gerontológico</h2>
+        <h2 className="logo">Psicólogo</h2>
         <ul className="sidebar-menu">
-          <li 
-            className={activeSection === 'avisos' ? 'active' : ''} 
-            onClick={() => handleSectionChange('avisos')}
-          >
-            Avisos
-          </li>
-          <li 
-            className={activeSection === 'registrarFicha' ? 'active' : ''} 
-            onClick={() => handleSectionChange('registrarFicha')}
-          >
-            Registrar Ficha
-          </li>
-          <li 
-            className={activeSection === 'editarUsuario' ? 'active' : ''} 
-            onClick={() => handleSectionChange('editarUsuario')}
-          >
-            Editar Perfil
-          </li>
-          <li 
-            className={activeSection === 'verFichasSociales' ? 'active' : ''} 
-            onClick={() => handleSectionChange('verFichasSociales')}
-          >
-            Ver Fichas Psicológicas {/* Nuevo botón */}
-          </li>
-          <li onClick={handleLogout}>Logout</li> {/* Nuevo botón */}
+          <li onClick={() => handleSectionChange('avisos')}>Avisos</li>
+          <li onClick={() => handleSectionChange('verPacientes')}>Ver Pacientes</li>
+          <li onClick={handleLogout}>Logout</li>
         </ul>
       </div>
 
@@ -74,63 +78,71 @@ const GerontologicalDashboard = () => {
           </div>
         )}
 
-        {activeSection === 'registrarFicha' && (
+        {activeSection === 'verPacientes' && (
+          <div className="ver-pacientes-section">
+            <h3>Listado de Pacientes</h3>
+            {loading ? (
+              <p>Cargando pacientes...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : pacientes.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pacientes.map((paciente) => (
+                    <tr key={paciente.id_paciente}>
+                      <td>{paciente.id_paciente}</td>
+                      <td>{paciente.nombre}</td>
+                      <td>{paciente.apellido}</td>
+                      <td>
+                        <button onClick={() => handleSectionChange('registrarFicha', paciente.id_paciente)}>
+                          Generar ficha
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No hay pacientes registrados.</p>
+            )}
+          </div>
+        )}
+
+        {activeSection === 'registrarFicha' && selectedPacienteId && (
           <div className="registrar-ficha-section">
             <h3>Registrar Nueva Ficha Médica</h3>
-
             <div className="ficha-tabs">
-              <button 
-                className={activeFicha === 'barthel' ? 'active' : ''} 
+              <button
+                className={activeFicha === 'barthel' ? 'active' : ''}
                 onClick={() => handleFichaChange('barthel')}
               >
                 Escala de Barthel
               </button>
-              <button 
-                className={activeFicha === 'ficha2' ? 'active' : ''} 
+              <button
+                className={activeFicha === 'ficha2' ? 'active' : ''}
                 onClick={() => handleFichaChange('ficha2')}
               >
                 Escala de LawtonBrody
               </button>
-              <button 
-                className={activeFicha === 'ficha3' ? 'active' : ''} 
+              <button
+                className={activeFicha === 'ficha3' ? 'active' : ''}
                 onClick={() => handleFichaChange('ficha3')}
               >
                 MiniMentalExam
               </button>
             </div>
 
-            {activeFicha === 'barthel' && <BarthelScale />}
-            {activeFicha === 'ficha2' && <Ficha2 />}
-            {activeFicha === 'ficha3' && <Ficha3 />}
-          </div>
-        )}
-
-        {activeSection === 'verFichasSociales' && (
-          <div className="ver-fichas-sociales-section">
-            <h3>Ver Fichas Sociales</h3>
-            {/* Aquí puedes incluir la lógica para mostrar las fichas sociales */}
-            <p>Listado de fichas sociales de pacientes</p>
-          </div>
-        )}
-
-        {activeSection === 'editarUsuario' && (
-          <div className="editar-usuario-section">
-            <h3>Editar Perfil</h3>
-            <form>
-              <div className="form-group">
-                <label htmlFor="nombreUsuario">Nombre Completo</label>
-                <input type="text" id="nombreUsuario" className="input-field" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="correoUsuario">Correo Electrónico</label>
-                <input type="email" id="correoUsuario" className="input-field" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="telefonoUsuario">Teléfono</label>
-                <input type="text" id="telefonoUsuario" className="input-field" />
-              </div>
-              <button type="submit" className="submit-btn">Guardar Cambios</button>
-            </form>
+            {activeFicha === 'barthel' && <BarthelScale idPaciente={selectedPacienteId} />}
+            {activeFicha === 'ficha2' && <Ficha2 idPaciente={selectedPacienteId} />}
+            {activeFicha === 'ficha3' && <Ficha3 idPaciente={selectedPacienteId} />}
           </div>
         )}
       </div>

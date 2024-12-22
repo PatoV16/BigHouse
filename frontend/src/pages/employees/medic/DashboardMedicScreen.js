@@ -41,7 +41,7 @@ const DoctorDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <h2 className="logo">Dashboard Médico</h2>
+        <h2 className="logo">Médico</h2>
         <ul className="sidebar-menu">
           <li onClick={() => handleSectionChange('avisos')}>Avisos</li>
           <li onClick={() => handleSectionChange('verFichasMedicas')}>Ver Fichas Médicas</li>
