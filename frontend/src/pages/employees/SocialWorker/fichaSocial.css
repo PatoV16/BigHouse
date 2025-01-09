@@ -1,0 +1,107 @@
+.ficha-social {
+  max-height: none;
+  overflow: visible;
+}
+
+.patient-info {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+  overflow: visible; /* Asegura que no haya restricciones */
+  page-break-inside: avoid; /* Evita cortes en la impresión */
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajusta columnas dinámicamente */
+  gap: 10px;
+}
+
+.info-item {
+  font-size: 14px;
+  color: black; /* Asegura que el texto sea visible */
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px; /* Espaciado adicional para impresión */
+}
+
+.evaluation-section {
+  margin-top: 20px;
+}
+
+.evaluation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.evaluation-item {
+  font-size: 14px;
+}
+
+.total-score {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.scrollable-container {
+  max-height: 80vh; /* Ajusta según sea necesario */
+  overflow-y: auto; /* Habilita el desplazamiento vertical */
+  padding: 16px;
+  border: 1px solid #ccc; /* Opcional: para delimitar el área */
+  background-color: #f9f9f9; /* Opcional */
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact; /* Asegura que los colores se impriman correctamente */
+  }
+
+  .print-button {
+    display: none; /* Oculta el botón de impresión */
+  }
+
+  .ficha-social {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+  }
+
+  .info-grid, .evaluation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .scrollable-container {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Asegurar que los encabezados y textos se muestren correctamente */
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .patient-info {
+    display: block !important; /* Fuerza visibilidad en impresión */
+    visibility: visible !important;
+    page-break-inside: avoid; /* Evita cortes entre páginas */
+    margin-bottom: 20px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .info-item {
+    font-size: 14px;
+    color: black !important; /* Asegura que el texto sea negro en la impresión */
+  }
+}

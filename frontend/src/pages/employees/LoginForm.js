@@ -1,21 +1,48 @@
 import React, { useState } from 'react';
-import './LoginForm.css'; // El archivo CSS para el estilo
+import { useNavigate } from 'react-router-dom'; // Importa el hook de navegación
+import './LoginForm.css'; 
+import axios from 'axios';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate(); // Hook de navegación
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Por favor, ingresa tu correo y contraseña.');
-      return;
-    }
-
-    // Aquí agregas la lógica de autenticación con API o base de datos
-    console.log('Datos enviados:', { email, password });
+    setLoading(true);
     setError('');
+  
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', {
+        username: email,
+        password,
+      });
+  
+      const data = response.data;
+      if (response.status === 200) {
+        localStorage.setItem('access_token', data.token);
+        localStorage.setItem('id_empleado', data.id)
+
+        // Redirigir según el cargo
+        if (data.cargo === 'Médico') {
+          navigate('/DashboardMedicScreen'); // Ruta para Gerente
+        } else if (data.cargo === 'Administrador') {
+          navigate('/DashboardAdmin'); // Ruta para Empleado
+        }else if (data.cargo === 'Psicólogo') {
+          navigate('/DashboardPsicology'); // Ruta por defecto o para otros cargos
+        }else if(data.cargo === 'Trabajador Social'){
+          navigate('/DashboardSocialWorker')
+        } 
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,6 +60,8 @@ const LoginForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input-field"
+              disabled={loading}
+              required
             />
           </div>
 
@@ -45,10 +74,14 @@ const LoginForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input-field"
+              disabled={loading}
+              required
             />
           </div>
 
-          <button type="submit" className="submit-button">Iniciar Sesión</button>
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? 'Cargando...' : 'Iniciar Sesión'}
+          </button>
         </form>
       </div>
     </div>

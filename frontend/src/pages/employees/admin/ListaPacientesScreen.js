@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Importa useNavigate
 import { getPacientes } from '../../../server/pacienteService';
 import './ListaPacientesStyle.css';
-// Asegúrate de que la ruta del archivo sea correcta
 
 const PacientesList = () => {
   const [pacientes, setPacientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();  // Usa el hook useNavigate para redirigir
 
   useEffect(() => {
     const fetchPacientes = async () => {
@@ -31,6 +32,13 @@ const PacientesList = () => {
     return <div>{error}</div>;
   }
 
+  const handleNavigation = (idPaciente) => {
+    navigate(`/ActaCompromiso/${idPaciente}`);  // Redirige a la ruta con el id del paciente
+  };
+  const handleNavigationScrren = (idPaciente) => {
+    navigate(`/ActaCompromisoScreen/${idPaciente}`);  // Redirige a la ruta con el id del paciente
+  };
+
   return (
     <div>
       <h1>Lista de Pacientes</h1>
@@ -51,14 +59,8 @@ const PacientesList = () => {
                 <td>{paciente.nombre}</td>
                 <td>{paciente.edad}</td>
                 <td>
-                  <button onClick={() => alert(`Ver paciente ${paciente.id}`)}>
+                  <button onClick={() => handleNavigationScrren(paciente.id_paciente)}>
                     Ver
-                  </button>
-                  <button onClick={() => alert(`Editar paciente ${paciente.id}`)}>
-                    Editar
-                  </button>
-                  <button onClick={() => alert(`Eliminar paciente ${paciente.id}`)}>
-                    Eliminar
                   </button>
                 </td>
               </tr>

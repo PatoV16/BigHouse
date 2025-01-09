@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios'; // Importa Axios
 import './RegisterPatientStyle.css'; // Asegúrate de que esta ruta sea correcta
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPatientScreen = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();  // Destructura reset
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
+  const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
       // Registrar los datos en la consola antes de enviarlos
@@ -27,6 +28,7 @@ const RegisterPatientScreen = () => {
         setSuccess('Paciente registrado con éxito');
         setError('');
         reset(); // Resetear el formulario después del registro exitoso
+        navigate('/DashboardAdmin')
       
     } catch (err) {
       console.error(err);

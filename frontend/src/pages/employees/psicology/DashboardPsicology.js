@@ -1,19 +1,40 @@
-import React, { useState, useEffect } from 'react';  // Importa useEffect
-import { useNavigate } from 'react-router-dom';  // Importa useNavigate
-import './GerontologicalDashboardStyle.css'; // Archivo CSS para estilos específicos
-import BarthelScale from './BarthelScale'; // Componente Escala de Barthel
-import Ficha2 from './LawtonBrodyTest'; // Componente Ficha 2 (supuesto)
-import Ficha3 from './MinimentalTest'; // Componente Ficha 3 (supuesto)
-import { getPacientes } from '../../../server/pacienteService'; // Importa el servicio de pacientes
+import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from 'react-router-dom'; 
+import './GerontologicalDashboardStyle.css'; 
+import BarthelScale from './BarthelScale'; 
+import Ficha2 from './LawtonBrodyTest'; 
+import Ficha3 from './MinimentalTest'; 
+import { getPacientes } from '../../../server/pacienteService'; 
+import BarthelRecord from './barthelRecord';
+import MiniExamenRecord from "./MiniExamenRecord";
+import MenuPsicologo from './menu';
+
 
 const GerontologicalDashboard = () => {
-  const [activeSection, setActiveSection] = useState('verPacientes'); // Sección activa
-  const [activeFicha, setActiveFicha] = useState('barthel'); // Sección activa de la ficha
-  const [pacientes, setPacientes] = useState([]); // Lista de pacientes
-  const [loading, setLoading] = useState(true); // Indicador de carga
-  const [error, setError] = useState(null); // Error al cargar pacientes
-  const [selectedPacienteId, setSelectedPacienteId] = useState(null); // ID del paciente seleccionado
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const [activeSection, setActiveSection] = useState('verPacientes');
+  const [activeFicha, setActiveFicha] = useState('barthel');
+  const [pacientes, setPacientes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedPacienteId, setSelectedPacienteId] = useState(null);
+  const [doctorName, setDoctorName] = useState(null); // Estado para el nombre del doctor
+  const navigate = useNavigate();
+
+  // Obtener el id_empleado del localStorage
+  const idEmpleado = localStorage.getItem('id_empleado');
+
+  // Función para obtener los datos del doctor
+  const fetchDoctorData = async () => {
+    if (idEmpleado) {
+      try {
+        const response = await fetch(`http://localhost:3000/empleados/${idEmpleado}`); // Ajusta esta URL según el endpoint
+        const data = await response.json();
+        setDoctorName(data.nombre); // Suponiendo que el nombre del doctor está en 'data.nombre'
+      } catch (err) {
+        console.error('Error al obtener los datos del doctor:', err);
+      }
+    }
+  };
 
   // Cargar pacientes
   const fetchPacientes = async () => {
@@ -28,32 +49,35 @@ const GerontologicalDashboard = () => {
     }
   };
 
-  // Llamar a fetchPacientes cuando el componente se monte
   useEffect(() => {
     fetchPacientes();
-  }, []); // El segundo parámetro vacío asegura que se ejecute solo una vez al montar el componente
+    fetchDoctorData(); // Cargar los datos del doctor al montar el componente
+  }, []); 
 
-  // Cambiar la sección activa
   const handleSectionChange = (section, pacienteId = null) => {
+    if (section === 'verFicha' && pacienteId) {
+      navigate(`/MenuPsicologo/${pacienteId}`);
+      return;
+    }
     setActiveSection(section);
-    if (pacienteId) setSelectedPacienteId(pacienteId);
+    setSelectedPacienteId(pacienteId);
   };
 
-  // Cambiar la ficha activa
   const handleFichaChange = (ficha) => {
     setActiveFicha(ficha);
   };
 
-  // Cerrar sesión
   const handleLogout = () => {
-    console.log('Logout');
-    navigate('/login'); // Redirige al login
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_empleado');
+    navigate('/loginForm');
   };
 
   return (
     <div className="dashboard-container">
       <div className="sidebar">
         <h2 className="logo">Psicólogo</h2>
+        <p>Doctor: {doctorName || 'Cargando...'}</p> {/* Mostrar nombre del doctor */}
         <ul className="sidebar-menu">
           <li onClick={() => handleSectionChange('avisos')}>Avisos</li>
           <li onClick={() => handleSectionChange('verPacientes')}>Ver Pacientes</li>
@@ -102,8 +126,8 @@ const GerontologicalDashboard = () => {
                       <td>{paciente.nombre}</td>
                       <td>{paciente.apellido}</td>
                       <td>
-                        <button onClick={() => handleSectionChange('registrarFicha', paciente.id_paciente)}>
-                          Generar ficha
+                        <button onClick={() => handleSectionChange('verFicha', paciente.id_paciente)}>
+                          Ver ficha
                         </button>
                       </td>
                     </tr>
@@ -116,9 +140,9 @@ const GerontologicalDashboard = () => {
           </div>
         )}
 
-        {activeSection === 'registrarFicha' && selectedPacienteId && (
-          <div className="registrar-ficha-section">
-            <h3>Registrar Nueva Ficha Médica</h3>
+        {activeSection === 'verRegistros' && selectedPacienteId && (
+          <div className="ver-registros-section">
+            <h3>Fichas del Paciente</h3>
             <div className="ficha-tabs">
               <button
                 className={activeFicha === 'barthel' ? 'active' : ''}
@@ -143,6 +167,13 @@ const GerontologicalDashboard = () => {
             {activeFicha === 'barthel' && <BarthelScale idPaciente={selectedPacienteId} />}
             {activeFicha === 'ficha2' && <Ficha2 idPaciente={selectedPacienteId} />}
             {activeFicha === 'ficha3' && <Ficha3 idPaciente={selectedPacienteId} />}
+          </div>
+        )}
+
+        {activeSection === 'verFicha' && selectedPacienteId && (
+          <div className="section-container">
+            <h3 className="section-title">ver Ficha psicológica</h3>
+            <MenuPsicologo idPaciente={selectedPacienteId} />
           </div>
         )}
       </div>

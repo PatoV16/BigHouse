@@ -24,6 +24,13 @@ export const getPacientes = async () => {
   }
 };
 
+// Obtener pacientes que no tienen fichas
+
+
+
+
+
+
 // Obtener un paciente por su ID
 export const getPacienteById = async (id) => {
   try {

@@ -1,61 +1,166 @@
-/* Estilos generales para el formulario */
-.ficha-social-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Estilo general para el formulario */
+form {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Títulos de las secciones */
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Estilo de las etiquetas de los campos */
+label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Estilo de los inputs y selects */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: border 0.3s ease-in-out;
+}
+
+/* Foco en los campos de texto */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #4b9cd3;
+  outline: none;
+}
+
+/* Estilo de los checkboxes */
+input[type="checkbox"] {
+  accent-color: #4b9cd3;
+  margin-right: 10px;
+}
+
+/* Contenedor de cada sección */
+section {
+  margin-bottom: 24px;
+}
+
+/* Botón de envío */
+button[type="submit"] {
+  background-color: #4b9cd3;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #3678a9;
+}
+
+/* Alineación y estilo de las secciones con checkbox */
+.flex {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.flex label {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Espaciado entre campos de formulario */
+.space-y-2 > * {
+  margin-bottom: 12px;
+}
+
+/* Ajuste para dispositivos móviles */
+@media (max-width: 600px) {
+  form {
+    padding: 15px;
   }
   
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .form-container {
-    margin-top: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  input, select, textarea {
-    width: 100%;
+  input[type="text"],
+  input[type="number"],
+  select {
     padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
   }
-  
-  textarea {
-    height: 100px;
+
+  button[type="submit"] {
+    padding: 10px 16px;
   }
-  
-  .error {
-    color: red;
-    font-size: 0.9em;
-  }
-  
-  .submit-btn {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1em;
-  }
-  
-  .submit-btn:hover {
-    background-color: #2980b9;
-  }
-  
+}
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  padding: 0 16px;
+  justify-content: flex-start;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: auto;
+}
+
+section {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+input[type="text"], input[type="number"], select, button {
+  width: 100%;
+}
+
+button {
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+h1, h3 {
+  margin-bottom: 10px;
+}
+/* Contenedor para habilitar el scroll */
+.scroll-container {
+  height: 100vh; /* Altura del contenedor igual a la pantalla */
+  overflow-y: auto; /* Habilita el scroll vertical */
+  padding: 20px; /* Espaciado interno opcional */
+  background-color: #f9f9f9; /* Fondo del contenedor */
+}

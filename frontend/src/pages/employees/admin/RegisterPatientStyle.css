@@ -2,12 +2,16 @@
 
 /* Estilo general de la pantalla */
 .register-patient-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f9;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Cambiado para que el contenido inicie desde arriba */
+  overflow-y: auto; /* Habilita el scroll vertical */
+  height: 100vh; /* Asegura que el contenedor tenga toda la altura de la ventana */
+  background-color: #f4f4f9;
+  padding: 20px; /* Agrega un espacio interno para que no se vea pegado */
+  box-sizing: border-box; /* Incluye el padding dentro del tamaño total */
+}
+
   
   /* Contenedor del formulario */
   .form-container {

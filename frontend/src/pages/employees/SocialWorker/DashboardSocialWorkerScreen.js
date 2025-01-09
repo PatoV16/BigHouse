@@ -1,23 +1,47 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Importa useNavigate
+import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from 'react-router-dom'; 
 import './DashboardSocialWorkerStyle.css'; // Asegúrate de importar el archivo CSS
+import { getPacientes } from '../../../server/pacienteService'; // Servicio para obtener pacientes
 
 const DashboardTrabajadorSocial = () => {
   const [activeSection, setActiveSection] = useState('avisos');
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const [pacientes, setPacientes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedPacienteId, setSelectedPacienteId] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSectionChange = (section) => {
+  // Cargar pacientes
+  const fetchPacientes = async () => {
+    try {
+      const data = await getPacientes();
+      setPacientes(data);
+    } catch (err) {
+      console.error('Error al cargar pacientes:', err);
+      setError('Error al cargar pacientes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPacientes();
+  }, []); // Llama a la función al montar el componente
+
+  const handleSectionChange = (section, pacienteId = null) => {
+    if (section === 'verFicha' && pacienteId) {
+      navigate(`/FichaSocial/${pacienteId}`);
+      return;
+    }
     setActiveSection(section);
+    setSelectedPacienteId(pacienteId);
   };
 
-  const handleRegistrarFicha = () => {
-    navigate('/RegistrarFichaSocial'); // Navega a la página de registro de ficha social
-  };
 
   const handleLogout = () => {
-    // Aquí puedes agregar la lógica de logout, por ejemplo, eliminando el token y redirigiendo
-    console.log('Logout');
-    navigate('/login'); // Redirige al login
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_empleado');
+    navigate('/LoginForm');
   };
 
   return (
@@ -26,10 +50,9 @@ const DashboardTrabajadorSocial = () => {
         <h2 className="logo">Dashboard Trabajador Social</h2>
         <ul className="sidebar-menu">
           <li onClick={() => handleSectionChange('avisos')}>Avisos</li>
-          <li onClick={handleRegistrarFicha}>Registrar Nueva Ficha</li>
-          <li onClick={() => handleSectionChange('verFichasSociales')}>Ver Fichas Sociales</li> {/* Nuevo botón */}
+          <li onClick={() => handleSectionChange('verFichasSociales')}>Ver Fichas Sociales</li>
           <li onClick={() => handleSectionChange('editarPerfil')}>Editar Perfil</li>
-          <li onClick={handleLogout}>Logout</li> {/* Nuevo botón */}
+          <li onClick={handleLogout}>Logout</li>
         </ul>
       </div>
 
@@ -50,32 +73,41 @@ const DashboardTrabajadorSocial = () => {
           </div>
         )}
 
-        {activeSection === 'registrarFicha' && (
-          <div className="registrar-ficha-section">
-            <h3>Registrar Nueva Ficha</h3>
-            <form>
-              <div className="form-group">
-                <label htmlFor="nombrePaciente">Nombre del Paciente</label>
-                <input type="text" id="nombrePaciente" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="edadPaciente">Edad</label>
-                <input type="number" id="edadPaciente" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="diagnostico">Diagnóstico</label>
-                <textarea id="diagnostico"></textarea>
-              </div>
-              <button type="submit" className="submit-btn">Registrar Ficha</button>
-            </form>
-          </div>
-        )}
-
         {activeSection === 'verFichasSociales' && (
           <div className="ver-fichas-sociales-section">
-            <h3>Ver Fichas Sociales</h3>
-            {/* Aquí puedes incluir la lógica para mostrar las fichas sociales, como un listado o un componente para visualizarlas */}
-            <p>Listado de fichas sociales de pacientes</p>
+            <h3>Listado de Fichas Sociales</h3>
+            {loading ? (
+              <p>Cargando fichas sociales...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : pacientes.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pacientes.map((paciente) => (
+                    <tr key={paciente.id_paciente}>
+                      <td>{paciente.id_paciente}</td>
+                      <td>{paciente.nombre}</td>
+                      <td>{paciente.apellido}</td>
+                      <td>
+                        <button onClick={() => handleSectionChange('verFicha', paciente.id_paciente)}>
+                          Ver ficha social
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No hay pacientes registrados.</p>
+            )}
           </div>
         )}
 
