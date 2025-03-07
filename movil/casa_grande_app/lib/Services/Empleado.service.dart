@@ -6,14 +6,14 @@ class EmpleadoService {
       FirebaseFirestore.instance.collection('empleados');
 
   // Guardar un empleado en Firestore
-  Future<void> addEmpleado(Empleado empleado) async {
-    try {
-      await empleadosRef.add(empleado.toMap());
-    } catch (e) {
-      throw Exception('Error al agregar empleado: $e');
-    }
+ Future<String> addEmpleado(Empleado empleado) async {
+  try {
+    DocumentReference docRef = await empleadosRef.add(empleado.toMap());
+    return docRef.id; // Devuelve el ID del documento creado
+  } catch (e) {
+    throw Exception('Error al agregar empleado: $e');
   }
-
+}
   // Obtener todos los empleados
   Stream<List<Empleado>> getEmpleados() {
     return empleadosRef.snapshots().map((snapshot) {

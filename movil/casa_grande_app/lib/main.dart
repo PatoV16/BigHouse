@@ -1,16 +1,19 @@
-import 'package:casa_grande_app/Pages/admin/ReferenciaDetalleScreen.dart';
-import 'package:casa_grande_app/Pages/admin/actaCompromiso.page.dart';
-import 'package:casa_grande_app/Pages/admin/adminDashboard.page.dart';
-import 'package:casa_grande_app/Pages/admin/asistencia.page.dart';
-import 'package:casa_grande_app/Pages/admin/empleadoList.page.dart';
-import 'package:casa_grande_app/Pages/admin/empleado_form.dart';
-import 'package:casa_grande_app/Pages/admin/listReferencia.dart';
-import 'package:casa_grande_app/Pages/admin/listaActas.dart';
-import 'package:casa_grande_app/Pages/admin/paciente_form.dart';
-import 'package:casa_grande_app/Pages/admin/verActaCompromiso.dart';
+import 'package:casa_grande_app/Models/UserModel.dart';
+import 'package:casa_grande_app/Pages/admin/screen/ReferenciaDetalleScreen.dart';
+import 'package:casa_grande_app/Pages/admin/form/actaCompromiso.page.dart';
+import 'package:casa_grande_app/Pages/admin/screen/adminDashboard.page.dart';
+import 'package:casa_grande_app/Pages/admin/screen/asistencia.page.dart';
+import 'package:casa_grande_app/Pages/admin/screen/empleadoList.page.dart';
+import 'package:casa_grande_app/Pages/admin/form/empleado_form.dart';
+import 'package:casa_grande_app/Pages/admin/screen/listReferencia.dart';
+import 'package:casa_grande_app/Pages/admin/screen/listaActas.dart';
+import 'package:casa_grande_app/Pages/admin/form/paciente_form.dart';
+import 'package:casa_grande_app/Pages/admin/screen/verActaCompromiso.dart';
+import 'package:casa_grande_app/Widgets/Login_Screen.dart';
+import 'package:casa_grande_app/Widgets/User_Dashboard_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Pages/admin/actasCompromisoScreen.dart';
+import 'Pages/admin/screen/actasCompromisoScreen.dart';
 import 'firebase_options.dart'; // Asegúrate de importar el archivo generado
 import 'package:provider/provider.dart';
 import 'package:casa_grande_app/Services/ActaCompromiso.service.dart';
@@ -47,7 +50,8 @@ class MyApp extends StatelessWidget {
         // Definimos las rutas de la aplicación
         initialRoute: '/login', // Ruta inicial
         routes: {
-          '/login': (context) => AdminDashboard(), // Pantalla de login
+          '/login': (context) => LoginScreen(), // Pantalla de login
+          '/admin': (context) => AdminDashboard(),
           '/registrarPaciente': (context) => const PacienteForm(),
           '/registrarEmpleado': (context) => const EmpleadoForm(),
           '/registrarActaCompromiso': (context) => const ActaCompromisoForm(),
@@ -64,6 +68,10 @@ class MyApp extends StatelessWidget {
                                       final args = ModalRoute.of(context)!.settings.arguments as String;
                                       return ReferenciaDetalleScreen(idPaciente: args);
                                     },
+          '/dashboardUser': (context){
+                                      final args = ModalRoute.of(context)!.settings.arguments as UserModel;
+                                      return UserDashboard(user: args);
+          },
           // Aquí puedes agregar más rutas para otros dashboards
         },
       ),
