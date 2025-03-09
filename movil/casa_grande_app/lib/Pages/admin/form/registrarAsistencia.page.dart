@@ -126,7 +126,7 @@ class _AgregarAsistenciaScreenState extends State<AgregarAsistenciaScreen> {
                 SelectField(
                   onChanged: (String? cedula) {
                     _idPacienteController.text = cedula ?? '';
-                  },
+                  }, items: [], label: '',
                 ),
                 const SizedBox(height: 10),
                 DatePickerField(

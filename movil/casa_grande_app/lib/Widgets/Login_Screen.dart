@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
           break;
         case 'Médico':
           Navigator.of(context).pushReplacementNamed(
-        '/dashboardUser',
+        '/MedicDashboard',
         arguments: userModel, // Pasamos el usuario como argumento
       );
           break;

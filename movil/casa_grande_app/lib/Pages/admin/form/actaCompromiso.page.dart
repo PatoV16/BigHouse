@@ -94,7 +94,7 @@ void mostrarAlerta(String titulo, String mensaje) {
                   setState(() {
                     idPacienteSeleccionado = cedula;
                   });
-                },
+                }, label: '', items: [],
               ),
               const SizedBox(height: 10),
               InputField(placeholder: 'Nombre Completo', controller: nombreController, label: '',),

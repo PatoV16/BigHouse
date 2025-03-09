@@ -149,4 +149,13 @@ class AuthService {
       throw Exception('Error al eliminar la cuenta: $e');
     }
   }
+  Future<String> obtenerUIDUsuario() async {
+  User? usuario = FirebaseAuth.instance.currentUser;
+  if (usuario != null) {
+    return usuario.uid;
+  } else {
+    throw Exception("No hay usuario autenticado");
+  }
+}
+
 }

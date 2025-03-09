@@ -9,11 +9,14 @@ import 'package:casa_grande_app/Pages/admin/screen/listReferencia.dart';
 import 'package:casa_grande_app/Pages/admin/screen/listaActas.dart';
 import 'package:casa_grande_app/Pages/admin/form/paciente_form.dart';
 import 'package:casa_grande_app/Pages/admin/screen/verActaCompromiso.dart';
+import 'package:casa_grande_app/Pages/medico/Form/fichaMedica.form.dart';
+import 'package:casa_grande_app/Pages/medico/Screen/ListaPacientes.dart';
+import 'package:casa_grande_app/Pages/medico/Screen/fichaMedicaScreen.dart';
 import 'package:casa_grande_app/Widgets/Login_Screen.dart';
-import 'package:casa_grande_app/Widgets/User_Dashboard_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Pages/admin/screen/actasCompromisoScreen.dart';
+import 'Pages/medico/Screen/MedicDashboard.screen.dart';
 import 'firebase_options.dart'; // Asegúrate de importar el archivo generado
 import 'package:provider/provider.dart';
 import 'package:casa_grande_app/Services/ActaCompromiso.service.dart';
@@ -51,6 +54,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/login', // Ruta inicial
         routes: {
           '/login': (context) => LoginScreen(), // Pantalla de login
+          //****/Administrador/ */
           '/admin': (context) => AdminDashboard(),
           '/registrarPaciente': (context) => const PacienteForm(),
           '/registrarEmpleado': (context) => const EmpleadoForm(),
@@ -68,11 +72,24 @@ class MyApp extends StatelessWidget {
                                       final args = ModalRoute.of(context)!.settings.arguments as String;
                                       return ReferenciaDetalleScreen(idPaciente: args);
                                     },
-          '/dashboardUser': (context){
+          //*****/Médico/******** */
+          
+          '/MedicDashboard': (context){
                                       final args = ModalRoute.of(context)!.settings.arguments as UserModel;
-                                      return UserDashboard(user: args);
+                                      return MedicDashboard(user: args);
+          
           },
+          '/PacienteLista': (context) => PacientesList(),
           // Aquí puedes agregar más rutas para otros dashboards
+          '/agregarFichaMedica': (context) {
+  final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+  return FichaMedicaForm(idPaciente: args['idPaciente']!, idEmpleado: args['idEmpleado']!);
+},
+'/verFichaMedica': (context) {
+  final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+  return FichaMedicaDetalleScreen (idPaciente: args['idPaciente']!);
+},
+
         },
       ),
     );

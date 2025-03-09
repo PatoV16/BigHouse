@@ -7,7 +7,7 @@ class SelectField extends StatefulWidget {
 
   const SelectField({
     Key? key,
-    required this.onChanged,
+    required this.onChanged, required String label, required List<String> items,
   }) : super(key: key);
 
   @override

@@ -62,5 +62,41 @@ class Paciente {
         : DateTime.now(),
   );
 }
+// Convertir a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id_paciente': id,
+      'nombre': nombre,
+      'apellido': apellido,
+      'cedula': cedula,
+      'fecha_nacimiento': fechaNacimiento.toIso8601String(),
+      'estado_civil': estadoCivil,
+      'nivel_instruccion': nivelInstruccion,
+      'profesion_ocupacion': profesionOcupacion,
+      'telefono': telefono,
+      'direccion': direccion,
+      'fecha_ingreso': fechaIngreso.toIso8601String(),
+    };
+  }
 
+  // Crear desde Map
+  factory Paciente.fromMap(Map<String, dynamic> map) {
+    return Paciente(
+      id: map['id_paciente'] as int?,
+      nombre: map['nombre'] ?? '',
+      apellido: map['apellido'] ?? '',
+      cedula: map['cedula'] ?? '',
+      fechaNacimiento: map['fecha_nacimiento'] != null
+          ? DateTime.parse(map['fecha_nacimiento'])
+          : DateTime.now(),
+      estadoCivil: map['estado_civil'] ?? '',
+      nivelInstruccion: map['nivel_instruccion'] ?? '',
+      profesionOcupacion: map['profesion_ocupacion'] ?? '',
+      telefono: map['telefono'] ?? '',
+      direccion: map['direccion'] ?? '',
+      fechaIngreso: map['fecha_ingreso'] != null
+          ? DateTime.parse(map['fecha_ingreso'])
+          : DateTime.now(),
+    );
+  }
 }

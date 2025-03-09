@@ -141,7 +141,7 @@ class _AgregarReferenciaScreenState extends State<AgregarReferenciaScreen> {
       _pacienteSeleccionado = null;
     }
     setState(() {}); 
-  },
+  }, items: [], label: '',
 ),
 
                 const SizedBox(height: 10),
