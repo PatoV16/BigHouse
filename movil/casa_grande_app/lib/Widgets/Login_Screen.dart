@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
         arguments: userModel, // Pasamos el usuario como argumento
       );
           break;
-        case 'enfermero':
+        case 'Psicólogo':
           Navigator.of(context).pushReplacementNamed('/dashboardUser');
           break;
         default:
