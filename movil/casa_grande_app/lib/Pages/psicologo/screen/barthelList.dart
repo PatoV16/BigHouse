@@ -1,3 +1,4 @@
+import 'package:casa_grande_app/Widgets/PsicologoCard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:casa_grande_app/Models/Paciente.model.dart';
 
@@ -35,7 +36,7 @@ class PacientesBarthelList extends StatelessWidget {
             return ListView.builder(
               itemCount: pacientes.length,
               itemBuilder: (context, index) {
-                return PacienteCard(paciente: pacientes[index]);
+                return PsicologoCard(paciente: pacientes[index]);
               },
             );
           },

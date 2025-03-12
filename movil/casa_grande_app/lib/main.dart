@@ -1,3 +1,5 @@
+import 'package:casa_grande_app/Models/Barthel.model.dart';
+import 'package:casa_grande_app/Models/Paciente.model.dart';
 import 'package:casa_grande_app/Models/UserModel.dart';
 import 'package:casa_grande_app/Pages/admin/screen/ReferenciaDetalleScreen.dart';
 import 'package:casa_grande_app/Pages/admin/form/actaCompromiso.page.dart';
@@ -12,6 +14,10 @@ import 'package:casa_grande_app/Pages/admin/screen/verActaCompromiso.dart';
 import 'package:casa_grande_app/Pages/medico/Form/fichaMedica.form.dart';
 import 'package:casa_grande_app/Pages/medico/Screen/ListaPacientes.dart';
 import 'package:casa_grande_app/Pages/medico/Screen/fichaMedicaScreen.dart';
+import 'package:casa_grande_app/Pages/psicologo/form/barthleform.dart';
+import 'package:casa_grande_app/Pages/psicologo/screen/barthelList.dart';
+import 'package:casa_grande_app/Pages/psicologo/screen/barthelScreen.dart';
+import 'package:casa_grande_app/Pages/psicologo/screen/psicologoDashboard.dart';
 import 'package:casa_grande_app/Widgets/Login_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +95,23 @@ class MyApp extends StatelessWidget {
   final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
   return FichaMedicaDetalleScreen (idPaciente: args['idPaciente']!);
 },
-
+//************************/Psicologo/********************* */ */
+'/PsicologoDashboard': (context){
+                                      final args = ModalRoute.of(context)!.settings.arguments as UserModel;
+                                      return PsicologoDashboard (user: args);
+          
+          },
+'/listaBarthel': (context) => PacientesBarthelList (),
+'/VerBarthel': (context){
+                                      final args = ModalRoute.of(context)!.settings.arguments as String;
+                                      return BarthelDetalleScreen (idPaciente: 'idPaciente');
+          
+          },
+'/FormBarthel': (context){
+                                      final args = ModalRoute.of(context)!.settings.arguments as String;
+                                      return BarthelForm (idPaciente: 'idPaciente');
+          
+          },
         },
       ),
     );

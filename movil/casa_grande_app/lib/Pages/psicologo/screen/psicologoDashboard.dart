@@ -86,7 +86,7 @@ class PsicologoDashboard extends StatelessWidget {
                     ActionButton(
                       label: 'Nueva\nFicha',
                       icon: CupertinoIcons.doc_append,
-                      onPressed: () => Navigator.pushNamed(context, '/agregarFichaMedica'),
+                      onPressed: () => Navigator.pushNamed(context, '/listaBarthel'),
                     ),
                     ActionButton(
                       label: 'Historial\nMédico',

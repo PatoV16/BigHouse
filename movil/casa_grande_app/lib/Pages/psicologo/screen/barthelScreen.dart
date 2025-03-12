@@ -16,12 +16,41 @@ class BarthelDetalleScreen extends StatefulWidget {
 class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
   late Future<Paciente?> paciente;
   late Future<Barthel?> barthel;
+  bool _checkingData = true;
 
   @override
   void initState() {
     super.initState();
     paciente = PacienteService().obtenerPacientePorCedula(widget.idPaciente);
     barthel = BarthelService().getBarthelById(widget.idPaciente);
+    
+    // Verificar si hay datos y navegar después de la inicialización
+    _verificarDatosDisponibles();
+  }
+
+  Future<void> _verificarDatosDisponibles() async {
+    try {
+      final resultados = await Future.wait([paciente, barthel]);
+      
+      // Verificar si tenemos datos válidos
+      if (resultados[0] == null || resultados[1] == null) {
+        // Esperar a que el widget esté montado antes de navegar
+        if (mounted) {
+          // Usar addPostFrameCallback para evitar navegar durante el build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushNamed(context, '/FormBarthel', arguments: widget.idPaciente);
+          });
+        }
+      }
+    } catch (e) {
+      print('Error al verificar datos: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _checkingData = false;
+        });
+      }
+    }
   }
 
   @override
@@ -32,51 +61,140 @@ class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
         backgroundColor: Colors.teal[700],
         elevation: 0,
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([paciente, barthel]),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: Colors.teal[700]));
-          } else if (snapshot.hasError) {
-            return _buildError('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData || snapshot.data![0] == null || snapshot.data![1] == null) {
-            return _buildError('No se encontró información del paciente o de la escala de Barthel');
-          }
+      body: _checkingData
+          ? Center(child: CircularProgressIndicator(color: Colors.teal[700]))
+          : FutureBuilder<List<dynamic>>(
+              future: Future.wait([paciente, barthel]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator(color: Colors.teal[700]));
+                } else if (snapshot.hasError) {
+                  return _buildError('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data![0] == null || snapshot.data![1] == null) {
+                  // En lugar de navegar, mostrar un mensaje
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline, size: 48, color: Colors.amber),
+                        SizedBox(height: 16),
+                        Text('No hay datos disponibles para este paciente.'),
+                        SizedBox(height: 24),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal[700],
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context, 
+                              '/FormBarthel', 
+                              arguments: widget.idPaciente
+                            );
+                          },
+                          child: Text('Registrar nueva evaluación'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
 
-          Paciente paciente = snapshot.data![0] as Paciente;
-          Barthel barthel = snapshot.data![1] as Barthel;
+                Paciente paciente = snapshot.data![0] as Paciente;
+                Barthel barthel = snapshot.data![1] as Barthel;
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSection(
-                  title: 'Información del Paciente',
-                  icon: Icons.person,
-                  children: [
-                    _buildInfoRow('Nombre:', '${paciente.nombre} ${paciente.apellido}'),
-                    _buildInfoRow('C.I.:', paciente.cedula),
-                    _buildInfoRow('Fecha de Evaluación:', _formatDate(barthel.fechaEvaluacion ?? DateTime.now())),
-                  ],
-                ),
-                _buildSection(
-  title: 'Resultados de la Escala de Barthel',
-  icon: Icons.assessment,
-  children: _buildBarthelItems(barthel),
-),
-
-                _buildSection(
-                  title: 'Observaciones',
-                  icon: Icons.note,
-                  children: [
-                    _buildInfoRow('Comentario:', barthel.observaciones ?? 'No especificado'),
-                  ],
-                ),
-                const SizedBox(height: 30),
-              ],
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSection(
+                        title: 'Información del Paciente',
+                        icon: Icons.person,
+                        children: [
+                          _buildInfoRow('Nombre:', '${paciente.nombre} ${paciente.apellido}'),
+                          _buildInfoRow('C.I.:', paciente.cedula),
+                          _buildInfoRow('Fecha de Evaluación:', _formatDate(barthel.fechaEvaluacion ?? DateTime.now())),
+                        ],
+                      ),
+                      _buildSection(
+                        title: 'Resultados de la Escala de Barthel',
+                        icon: Icons.assessment,
+                        children: [
+                          ..._buildBarthelItems(barthel),
+                          SizedBox(height: 16),
+                          _buildTotalScore(barthel.puntajeTotal ?? 0),
+                        ],
+                      ),
+                      _buildSection(
+                        title: 'Observaciones',
+                        icon: Icons.note,
+                        children: [
+                          _buildInfoRow('Comentario:', barthel.observaciones ?? 'No especificado'),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                );
+              },
             ),
-          );
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.teal[700],
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, '/FormBarthel', arguments: widget.idPaciente);
         },
+      ),
+    );
+  }
+
+  Widget _buildTotalScore(int puntaje) {
+    String interpretacion = '';
+    Color color = Colors.green;
+    
+    if (puntaje < 21) {
+      interpretacion = 'Dependencia total';
+      color = Colors.red;
+    } else if (puntaje < 61) {
+      interpretacion = 'Dependencia severa';
+      color = Colors.orange;
+    } else if (puntaje < 91) {
+      interpretacion = 'Dependencia moderada';
+      color = Colors.amber;
+    } else if (puntaje < 100) {
+      interpretacion = 'Dependencia leve';
+      color = Colors.lightGreen;
+    } else {
+      interpretacion = 'Independencia';
+      color = Colors.green;
+    }
+    
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Puntaje Total: $puntaje',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Interpretación: $interpretacion',
+            style: TextStyle(
+              fontSize: 16,
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -175,24 +293,24 @@ class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
       ),
     );
   }
+
   List<Widget> _buildBarthelItems(Barthel barthel) {
-  final actividades = [
-    {'actividad': 'Comer', 'puntaje': barthel.comer},
-    {'actividad': 'Traslado', 'puntaje': barthel.traslado},
-    {'actividad': 'Aseo Personal', 'puntaje': barthel.aseoPersonal},
-    {'actividad': 'Uso de Retrete', 'puntaje': barthel.usoRetrete},
-    {'actividad': 'Bañarse', 'puntaje': barthel.banarse},
-    {'actividad': 'Desplazarse', 'puntaje': barthel.desplazarse},
-    {'actividad': 'Subir Escaleras', 'puntaje': barthel.subirEscaleras},
-    {'actividad': 'Vestirse', 'puntaje': barthel.vestirse},
-    {'actividad': 'Control de Heces', 'puntaje': barthel.controlHeces},
-    {'actividad': 'Control de Orina', 'puntaje': barthel.controlOrina},
-  ];
+    final actividades = [
+      {'actividad': 'Comer', 'puntaje': barthel.comer},
+      {'actividad': 'Traslado', 'puntaje': barthel.traslado},
+      {'actividad': 'Aseo Personal', 'puntaje': barthel.aseoPersonal},
+      {'actividad': 'Uso de Retrete', 'puntaje': barthel.usoRetrete},
+      {'actividad': 'Bañarse', 'puntaje': barthel.banarse},
+      {'actividad': 'Desplazarse', 'puntaje': barthel.desplazarse},
+      {'actividad': 'Subir Escaleras', 'puntaje': barthel.subirEscaleras},
+      {'actividad': 'Vestirse', 'puntaje': barthel.vestirse},
+      {'actividad': 'Control de Heces', 'puntaje': barthel.controlHeces},
+      {'actividad': 'Control de Orina', 'puntaje': barthel.controlOrina},
+    ];
 
-  return actividades
-      .where((item) => item['puntaje'] != null) // Filtrar los valores nulos
-      .map((item) => _buildInfoRow(item['actividad'].toString(), '${item['puntaje']} puntos'))
-      .toList();
-}
-
+    return actividades
+        .where((item) => item['puntaje'] != null) // Filtrar los valores nulos
+        .map((item) => _buildInfoRow(item['actividad'].toString(), '${item['puntaje']} puntos'))
+        .toList();
+  }
 }

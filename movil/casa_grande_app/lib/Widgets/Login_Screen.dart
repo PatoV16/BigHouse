@@ -70,7 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
           break;
         case 'Psicólogo':
-          Navigator.of(context).pushReplacementNamed('/dashboardUser');
+          Navigator.of(context).pushReplacementNamed(
+            '/PsicologoDashboard',
+            arguments: userModel,);
           break;
         default:
           Navigator.of(context).pushReplacementNamed('/home');
