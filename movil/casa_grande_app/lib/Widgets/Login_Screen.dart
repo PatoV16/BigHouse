@@ -1,5 +1,6 @@
 import 'package:casa_grande_app/Services/Usuario.server.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:ui';
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _login() async {
+ Future<void> _login() async {
   if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
     _showErrorDialog('Por favor, complete todos los campos');
     return;
@@ -38,52 +39,83 @@ class _LoginScreenState extends State<LoginScreen> {
     _isLoading = true;
   });
 
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16.0),
+            Text('Iniciando sesión...'),
+          ],
+        ),
+      );
+    },
+  );
+
   try {
-    // Authenticate and get user data in one operation
-    final UserModel? userModel = await _authService.signInWithEmailAndPassword(
+    // Primer paso: Autenticar con Firebase Auth
+    final User? user = await _authService.signInWithEmailAndPassword(
+      context,
       _emailController.text.trim(),
       _passwordController.text,
     );
 
-    // Redirigir según el cargo
-    if (mounted) {
-      switch (userModel?.cargo) {
-        case 'Administrador':
-          Navigator.of(context).pushReplacementNamed('/admin');
-          break;
-        case 'Médico':
-          Navigator.of(context).pushReplacementNamed(
-            '/MedicDashboard',
-            arguments: userModel,
-          );
-          break;
-        case 'Psicólogo':
-          Navigator.of(context).pushReplacementNamed(
-            '/PsicologoDashboard',
-            arguments: userModel,
-          );
-          break;
-        case 'Trabajador Social':
-          Navigator.of(context).pushReplacementNamed(
-            '/TrabajadorSocialDashboard',
-            arguments: userModel,
-          );
-          break;
-        default:
-          Navigator.of(context).pushReplacementNamed('/home');
-          break;
+    // Si la autenticación es exitosa, obtener los datos del usuario
+    if (user != null) {
+      // Cerrar el diálogo de carga
+      Navigator.of(context).pop();
+      
+      // Obtener los datos del usuario desde Firestore
+      final UserModel? userModel = await _authService.getUserDataAfterAuth(user.uid);
+      
+      if (userModel != null && mounted) {
+        // Redirigir según el cargo
+        switch (userModel.cargo) {
+          case 'Administrador':
+            Navigator.of(context).pushReplacementNamed('/admin');
+            break;
+          case 'Médico':
+            Navigator.of(context).pushReplacementNamed(
+              '/MedicDashboard',
+              arguments: userModel,
+            );
+            break;
+          case 'Psicólogo':
+            Navigator.of(context).pushReplacementNamed(
+              '/PsicologoDashboard',
+              arguments: userModel,
+            );
+            break;
+          case 'Trabajador Social':
+            Navigator.of(context).pushReplacementNamed(
+              '/TrabajadorSocialDashboard',
+              arguments: userModel,
+            );
+            break;
+          default:
+            Navigator.of(context).pushReplacementNamed('/home');
+            break;
+        }
+      } else {
+        _showErrorDialog('No se pudieron obtener los datos del usuario');
       }
+    } else {
+      // Cerrar el diálogo de carga
+      Navigator.of(context).pop();
+      _showErrorDialog('Credenciales incorrectas');
     }
   } catch (e) {
+    // Cerrar el diálogo de carga si aún está visible
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+    }
+    
     if (mounted) {
-      String errorMessage = 'Error al iniciar sesión';
-      if (e.toString().contains('Exception:')) {
-        // Extract the clean error message without the Exception prefix
-        errorMessage = e.toString().split('Exception:')[1].trim();
-      } else {
-        errorMessage += ': ${e.toString()}';
-      }
-      _showErrorDialog(errorMessage);
+      _showErrorDialog('Error al iniciar sesión: ${e.toString()}');
     }
   } finally {
     if (mounted) {
