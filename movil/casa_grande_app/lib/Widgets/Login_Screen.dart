@@ -29,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-  var _userService = UserService();
   if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
     _showErrorDialog('Por favor, complete todos los campos');
     return;
@@ -40,57 +39,47 @@ class _LoginScreenState extends State<LoginScreen> {
   });
 
   try {
-    // Primero verifica si el usuario existe en Firestore
-    UserModel? userModel = await _userService.getUserByEmail(_emailController.text.trim());
-    
-    if (userModel == null) {
-      _showErrorDialog('El usuario no existe en la base de datos');
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
-    
-    // Luego intenta autenticar
-    await _authService.signInWithEmailAndPassword(
+    // Authenticate and get user data in one operation
+    final UserModel? userModel = await _authService.signInWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text,
     );
 
     // Redirigir según el cargo
     if (mounted) {
-      switch (userModel.cargo) {
+      switch (userModel?.cargo) {
         case 'Administrador':
           Navigator.of(context).pushReplacementNamed('/admin');
           break;
         case 'Médico':
           Navigator.of(context).pushReplacementNamed(
-        '/MedicDashboard',
-        arguments: userModel, // Pasamos el usuario como argumento
-      );
+            '/MedicDashboard',
+            arguments: userModel,
+          );
           break;
         case 'Psicólogo':
           Navigator.of(context).pushReplacementNamed(
             '/PsicologoDashboard',
-            arguments: userModel,);
+            arguments: userModel,
+          );
           break;
         case 'Trabajador Social':
           Navigator.of(context).pushReplacementNamed(
             '/TrabajadorSocialDashboard',
-            arguments: userModel,);
+            arguments: userModel,
+          );
           break;
         default:
           Navigator.of(context).pushReplacementNamed('/home');
           break;
       }
-      ///TrabajadorSocialDashboard
     }
   } catch (e) {
     if (mounted) {
-      // Manejo de error más específico
       String errorMessage = 'Error al iniciar sesión';
-      if (e.toString().contains(':')) {
-        errorMessage += ': ${e.toString().split(': ').length > 1 ? e.toString().split(': ')[1] : e.toString()}';
+      if (e.toString().contains('Exception:')) {
+        // Extract the clean error message without the Exception prefix
+        errorMessage = e.toString().split('Exception:')[1].trim();
       } else {
         errorMessage += ': ${e.toString()}';
       }

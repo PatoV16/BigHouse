@@ -45,19 +45,20 @@ class AuthService {
 }
 
   // Inicio de sesión con email y contraseña
-  Future<UserModel> signInWithEmailAndPassword(String email, String password) async {
+ // Modified AuthService method
+Future<UserModel?> signInWithEmailAndPassword(String email, String password) async {
   try {
+    // First authenticate with Firebase Auth
     final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    // Obtener UID del usuario autenticado
+    // Get the UID from the authenticated user
     final String uid = userCredential.user!.uid;
 
-    // Obtener la información del usuario desde Firestore
-    final UserModel user = await _userService.getUserById(uid) as UserModel;
-
+    // Then retrieve user data from Firestore using the UID
+    final UserModel? user = await _userService.getUserById(uid);
     return user;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
@@ -71,7 +72,6 @@ class AuthService {
     throw Exception('Error al iniciar sesión: $e');
   }
 }
-
 
   // Cerrar sesión
   Future<void> signOut() async {
