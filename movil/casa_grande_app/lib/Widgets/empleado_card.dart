@@ -21,7 +21,7 @@ class EmpleadoCard extends StatelessWidget {
           },
         ),
         onTap: () {
-          // Aquí puedes navegar a la pantalla de detalles del empleado
+          Navigator.pushNamed(context, '/EditarEmpleado', arguments: empleado.cedula);
         },
       ),
     );

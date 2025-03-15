@@ -72,6 +72,10 @@ class PsicologoCard extends StatelessWidget {
                     value: 'Yessavage',
                     child: Text('Yessavage'),
                   ),
+                  PopupMenuItem(
+                    value: 'Informe',
+                    child: Text('Informe'),
+                  ),
                 ],
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.menu),
@@ -93,13 +97,16 @@ class PsicologoCard extends StatelessWidget {
         ruta = '/VerBarthel';
         break;
       case 'Minimental':
-        ruta = '/ficha-minimental';
+        ruta = '/VerMiniExamen';
         break;
       case 'Lawton':
-        ruta = '/ficha-lawton';
+        ruta = '/VerLawton';
         break;
       case 'Yessavage':
-        ruta = '/ficha-yessavage';
+        ruta = '/VerYesavage';
+        break;
+      case 'Informe':
+        ruta = '/VerInforme';
         break;
       default:
         ruta = '/';

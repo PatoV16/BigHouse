@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import '../Models/UserModel.dart';
 import 'Usuario.server.dart';
 
@@ -155,6 +156,17 @@ class AuthService {
     return usuario.uid;
   } else {
     throw Exception("No hay usuario autenticado");
+  }
+}
+// Cerrar sesión y navegar al login
+Future<void> signOutAndNavigateToLogin(BuildContext context) async {
+  try {
+    await _auth.signOut(); // Cerrar sesión en Firebase
+
+    // Navegar al login y reemplazar la pantalla actual
+    Navigator.pushReplacementNamed(context, '/login');
+  } catch (e) {
+    throw Exception('Error al cerrar sesión: $e');
   }
 }
 

@@ -1,10 +1,11 @@
+import 'package:casa_grande_app/Services/Auth.Service.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../Widgets/action_button.dart';
 import '../../../Widgets/stats_card.dart';
 
 class AdminDashboard extends StatelessWidget {
-  const AdminDashboard({Key? key}) : super(key: key);
-
+   AdminDashboard({Key? key}) : super(key: key);
+  final authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -67,6 +68,11 @@ class AdminDashboard extends StatelessWidget {
                       icon: CupertinoIcons.arrow_right_arrow_left,
                       onPressed: () => Navigator.pushNamed(context, '/referenciaLista'),
                     ),
+                    ActionButton(
+  label: 'Cerrar sesión',
+  icon: CupertinoIcons.power,  // Ícono de logout
+  onPressed: () => authService.signOutAndNavigateToLogin(context) ,
+),
                   ],
                 ),
               ),

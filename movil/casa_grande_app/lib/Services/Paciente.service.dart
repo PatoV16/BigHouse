@@ -35,10 +35,13 @@ class PacienteService {
       .get();
 
   if (snapshot.docs.isNotEmpty) {
-    return Paciente.fromJson(snapshot.docs.first.data() as Map<String, dynamic>);
+    final data = snapshot.docs.first.data() as Map<String, dynamic>;
+    print(Paciente.fromJson(data));
+    return Paciente.fromJson(data);
   }
   return null;
 }
+
 
 }
 

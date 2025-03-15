@@ -23,9 +23,10 @@ class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
     super.initState();
     paciente = PacienteService().obtenerPacientePorCedula(widget.idPaciente);
     barthel = BarthelService().getBarthelById(widget.idPaciente);
-    
+    print(widget.idPaciente);
+    print(barthel);
     // Verificar si hay datos y navegar después de la inicialización
-    _verificarDatosDisponibles();
+   _verificarDatosDisponibles();
   }
 
   Future<void> _verificarDatosDisponibles() async {
@@ -38,7 +39,7 @@ class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
         if (mounted) {
           // Usar addPostFrameCallback para evitar navegar durante el build
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushNamed(context, '/FormBarthel', arguments: widget.idPaciente);
+            Navigator.pushNamed(context, '/FormBarthel', arguments: {'idPaciente': widget.idPaciente});
           });
         }
       }
@@ -137,13 +138,7 @@ class _BarthelDetalleScreenState extends State<BarthelDetalleScreen> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal[700],
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, '/FormBarthel', arguments: widget.idPaciente);
-        },
-      ),
+      
     );
   }
 

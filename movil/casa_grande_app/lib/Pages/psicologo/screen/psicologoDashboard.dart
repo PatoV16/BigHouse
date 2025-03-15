@@ -1,4 +1,5 @@
 import 'package:casa_grande_app/Models/UserModel.dart';
+import 'package:casa_grande_app/Services/Auth.Service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Divider, TextButton;
 import '../../../Widgets/action_button.dart';
@@ -6,8 +7,8 @@ import '../../../Widgets/stats_card.dart';
 
 class PsicologoDashboard extends StatelessWidget {
   final UserModel user; // Modelo de usuario con información como nombre y cargo
-  
-  const PsicologoDashboard({Key? key, required this.user}) : super(key: key);
+  final authService = AuthService();
+   PsicologoDashboard({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +94,12 @@ class PsicologoDashboard extends StatelessWidget {
                       icon: CupertinoIcons.chart_bar,
                       onPressed: () => Navigator.pushNamed(context, '/historialMedico'),
                     ),
-                    ActionButton(
-                      label: 'Cerrar sesión',
-                      icon: CupertinoIcons.calendar,
-                      onPressed: () => Navigator.pushNamed(context, '/consultasPendientes'),
-                    ),
+                   ActionButton(
+  label: 'Cerrar sesión',
+  icon: CupertinoIcons.power,  // Ícono de logout
+  onPressed: () => authService.signOutAndNavigateToLogin(context) ,
+),
+
                   ],
                 ),
               ),

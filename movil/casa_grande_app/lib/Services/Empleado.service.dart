@@ -27,13 +27,32 @@ class EmpleadoService {
   }
 
   // Actualizar un empleado
-  Future<void> updateEmpleado(Empleado empleado) async {
-    try {
-      await empleadosRef.doc(empleado.id).update(empleado.toMap());
-    } catch (e) {
-      throw Exception('Error al actualizar empleado: $e');
+  // Actualizar un empleado usando la cédula como identificador
+Future<void> updateEmpleado(Empleado empleado) async {
+  try {
+    // Primero buscamos el documento por cédula
+    QuerySnapshot querySnapshot = await empleadosRef
+        .where('cedula', isEqualTo: empleado.cedula)
+        .limit(1)
+        .get();
+    
+    // Verificar si se encontró algún documento
+    if (querySnapshot.docs.isEmpty) {
+      throw Exception('No se encontró ningún empleado con la cédula: ${empleado.cedula}');
     }
+    
+    // Obtener el ID del documento
+    String docId = querySnapshot.docs.first.id;
+    
+    // Actualizar el documento usando su ID
+    await empleadosRef.doc(docId).update(empleado.toMap());
+    
+    print('Empleado actualizado correctamente. ID: $docId');
+  } catch (e) {
+    print('Error al actualizar empleado: $e');
+    throw Exception('Error al actualizar empleado: $e');
   }
+}
 
   // Eliminar un empleado
   Future<void> deleteEmpleado(String id) async {
@@ -64,5 +83,45 @@ class EmpleadoService {
       throw Exception('Error al obtener empleado por UID: $e');
     }
   }
-  
+  // Buscar empleado por cédula
+// Obtener un empleado por su cédula
+Future<Empleado?> obtenerEmpleadoPorCedula(String cedula) async {
+  try {
+    QuerySnapshot querySnapshot = await empleadosRef
+        .where('cedula', isEqualTo: cedula)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var doc = querySnapshot.docs.first;
+      return Empleado.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    } else {
+      return null; // No se encontró el empleado
+    }
+  } catch (e) {
+    throw Exception('Error al obtener empleado por cédula: $e');
+  }
+}
+
+  Future<void>  updateEmpleadoPorCedula(String cedula, Empleado empleado) async {
+  try {
+    // Buscar el documento por cédula
+    final querySnapshot = await empleadosRef
+        .where('cedula', isEqualTo: cedula)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Obtener el ID del documento
+      final docId = querySnapshot.docs.first.id;
+
+      // Actualizar el documento usando su ID
+      await empleadosRef.doc(docId).update(empleado.toMap());
+    } else {
+      throw Exception('No se encontró ningún empleado con la cédula $cedula');
+    }
+  } catch (e) {
+    throw Exception('Error al actualizar empleado: $e');
+  }
+}
 }

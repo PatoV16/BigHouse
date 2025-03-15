@@ -18,16 +18,19 @@ class BarthelService {
   }
 
   Future<Barthel?> getBarthelById(String id) async {
-    final snapshot = await barthelRef
+  final snapshot = await barthelRef
       .where('id_paciente', isEqualTo: id)
       .limit(1)
       .get();
 
   if (snapshot.docs.isNotEmpty) {
-    return Barthel.fromMap(snapshot.docs.first.data() as Map<String, dynamic>);
+    final data = snapshot.docs.first.data() as Map<String, dynamic>;
+    print(Barthel.fromMap(data));
+    return Barthel.fromMap(data);
   }
   return null;
-  }
+}
+
 
   Future<void> updateBarthel(String id, Barthel barthel) async {
     await barthelRef.doc(id).update(barthel.toMap());
