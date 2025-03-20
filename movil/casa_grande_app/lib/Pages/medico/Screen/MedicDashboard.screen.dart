@@ -1,5 +1,6 @@
 import 'package:casa_grande_app/Models/UserModel.dart';
 import 'package:casa_grande_app/Services/Auth.Service.dart';
+import 'package:casa_grande_app/Widgets/AvisosListWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Divider, TextButton;
 import '../../../Widgets/action_button.dart';
@@ -90,9 +91,9 @@ class MedicDashboard extends StatelessWidget {
                       onPressed: () => Navigator.pushNamed(context, '/agregarFichaMedica'),
                     ),
                     ActionButton(
-                      label: 'Historial\nMédico',
+                      label: 'Evoución\nMédica',
                       icon: CupertinoIcons.chart_bar,
-                      onPressed: () => Navigator.pushNamed(context, '/historialMedico'),
+                      onPressed: () => Navigator.pushNamed(context, '/Evolucion'),
                     ),
                     ActionButton(
   label: 'Cerrar sesión',
@@ -116,74 +117,13 @@ class MedicDashboard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: StatsCard(
-                      title: 'Pacientes Hoy',
-                      value: '12',
-                      backgroundColor: CupertinoColors.systemBlue.withOpacity(0.1),
-                    ),
+                    child: AvisosListWidget(),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: StatsCard(
-                      title: 'Pendientes',
-                      value: '5',
-                      backgroundColor: CupertinoColors.systemOrange.withOpacity(0.1),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: StatsCard(
-                      title: 'Total Pacientes',
-                      value: '87',
-                      backgroundColor: CupertinoColors.systemGreen.withOpacity(0.1),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: StatsCard(
-                      title: 'Fichas Nuevas',
-                      value: '3',
-                      backgroundColor: CupertinoColors.systemPurple.withOpacity(0.1),
-                    ),
-                  ),
+                  
                 ],
               ),
               
-              const SizedBox(height: 20),
               
-              // Próximas consultas
-              const Text(
-                'Próximas Consultas',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey6,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    _buildAppointmentRow('María González', '10:00', 'Consulta General'),
-                    const Divider(),
-                    _buildAppointmentRow('Juan Pérez', '11:30', 'Seguimiento'),
-                    const Divider(),
-                    _buildAppointmentRow('Ana Torres', '14:15', 'Primera visita'),
-                    TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/todasConsultas'),
-                      child: const Text('Ver todas'),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

@@ -2,10 +2,12 @@ import 'package:casa_grande_app/Models/Barthel.model.dart';
 import 'package:casa_grande_app/Models/Empleado.model.dart';
 import 'package:casa_grande_app/Models/Paciente.model.dart';
 import 'package:casa_grande_app/Models/UserModel.dart';
+import 'package:casa_grande_app/Pages/admin/form/avisosForm.dart';
 import 'package:casa_grande_app/Pages/admin/screen/ReferenciaDetalleScreen.dart';
 import 'package:casa_grande_app/Pages/admin/form/actaCompromiso.page.dart';
 import 'package:casa_grande_app/Pages/admin/screen/adminDashboard.page.dart';
 import 'package:casa_grande_app/Pages/admin/screen/asistencia.page.dart';
+import 'package:casa_grande_app/Pages/admin/screen/avisosLista.page.dart';
 import 'package:casa_grande_app/Pages/admin/screen/edithEmpleado.dart';
 import 'package:casa_grande_app/Pages/admin/screen/empleadoList.page.dart';
 import 'package:casa_grande_app/Pages/admin/form/empleado_form.dart';
@@ -30,8 +32,10 @@ import 'package:casa_grande_app/Pages/trabajadorSocial/form/fichaSocialform.dart
 import 'package:casa_grande_app/Pages/trabajadorSocial/screen/dashboardTrabajadorSocial.dart';
 import 'package:casa_grande_app/Pages/trabajadorSocial/screen/fichaSocialList.dart';
 import 'package:casa_grande_app/Pages/trabajadorSocial/screen/fichaSocialScreen.dart';
+import 'package:casa_grande_app/Widgets/EvolucionCard.dart';
 import 'package:casa_grande_app/Widgets/Login_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'Pages/admin/screen/actasCompromisoScreen.dart';
 import 'Pages/medico/Screen/MedicDashboard.screen.dart';
@@ -83,6 +87,7 @@ class MyApp extends StatelessWidget {
           '/registrarAsistenciaPaciente': (context) => const AsistenciaListScreen(),
           '/referenciaLista': (context) => const ReferenciaListScreen(),
           '/listaActasCompromiso': (context) => const ActaCompromisoListScreen(),
+          '/listaAvisos': (context) =>  AgregarAvisoScreen(),
           '/cartaCompomiso': (context) =>  CartaCompromisoScreen(),
           '/verActaCompromiso': (context) {
                                       final args = ModalRoute.of(context)!.settings.arguments as String;
@@ -97,7 +102,7 @@ class MyApp extends StatelessWidget {
                                       return ReferenciaDetalleScreen(idPaciente: args);
                                     },
           //*****/Médico/******** */
-          
+          '/Evolucion': (context) => EvolucionScreen(),
           '/MedicDashboard': (context){
                                       final args = ModalRoute.of(context)!.settings.arguments as UserModel;
                                       return MedicDashboard(user: args);

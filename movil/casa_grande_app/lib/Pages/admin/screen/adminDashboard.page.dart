@@ -1,4 +1,5 @@
 import 'package:casa_grande_app/Services/Auth.Service.dart';
+import 'package:casa_grande_app/Widgets/AvisosListWidget.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../Widgets/action_button.dart';
 import '../../../Widgets/stats_card.dart';
@@ -51,7 +52,7 @@ class AdminDashboard extends StatelessWidget {
                     ActionButton(
                       label: 'Avisos',
                       icon: CupertinoIcons.bell,
-                      onPressed: () => Navigator.pushNamed(context, '/list'),
+                      onPressed: () => Navigator.pushNamed(context, '/listaAvisos'),
                     ),
                     ActionButton(
                       label: 'Acta',
@@ -82,28 +83,9 @@ class AdminDashboard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: StatsCard(
-                      title: 'Total Empleados',
-                      value: '120',
-                      backgroundColor: CupertinoColors.systemBlue.withOpacity(0.1),
-                    ),
+                    child: AvisosListWidget(),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: StatsCard(
-                      title: 'Activos',
-                      value: '98',
-                      backgroundColor: CupertinoColors.systemGreen.withOpacity(0.1),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: StatsCard(
-                      title: 'Inactivos',
-                      value: '22',
-                      backgroundColor: CupertinoColors.systemRed.withOpacity(0.1),
-                    ),
-                  ),
+                  
                 ],
               ),
             ],
