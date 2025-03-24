@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Divider, TextButton;
 import '../../../Widgets/AvisosListWidget.dart';
 import '../../../Widgets/action_button.dart';
+import '../../../Widgets/avisosUser.dart';
 import '../../../Widgets/stats_card.dart';
 
 class PsicologoDashboard extends StatelessWidget {
@@ -118,7 +119,7 @@ class PsicologoDashboard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: AvisosListWidget(),
+                    child: AvisosListUserWidget(),
                   ),
                   const SizedBox(width: 10),
                   

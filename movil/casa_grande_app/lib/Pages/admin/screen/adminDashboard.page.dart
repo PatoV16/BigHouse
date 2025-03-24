@@ -45,11 +45,6 @@ class AdminDashboard extends StatelessWidget {
                       onPressed: () => Navigator.pushNamed(context, '/empleadosList'),
                     ),
                     ActionButton(
-                      label: 'Asistencia',
-                      icon: CupertinoIcons.calendar,
-                      onPressed: () => Navigator.pushNamed(context, '/registrarAsistenciaPaciente'),
-                    ),
-                    ActionButton(
                       label: 'Avisos',
                       icon: CupertinoIcons.bell,
                       onPressed: () => Navigator.pushNamed(context, '/listaAvisos'),

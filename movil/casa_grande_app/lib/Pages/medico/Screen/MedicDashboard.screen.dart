@@ -1,6 +1,7 @@
 import 'package:casa_grande_app/Models/UserModel.dart';
 import 'package:casa_grande_app/Services/Auth.Service.dart';
 import 'package:casa_grande_app/Widgets/AvisosListWidget.dart';
+import 'package:casa_grande_app/Widgets/avisosUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Divider, TextButton;
 import '../../../Widgets/action_button.dart';
@@ -85,11 +86,7 @@ class MedicDashboard extends StatelessWidget {
                       icon: CupertinoIcons.checkmark_circle,
                       onPressed: () => Navigator.pushNamed(context, '/registrarAsistencia'),
                     ),
-                    ActionButton(
-                      label: 'Nueva\nFicha',
-                      icon: CupertinoIcons.doc_append,
-                      onPressed: () => Navigator.pushNamed(context, '/agregarFichaMedica'),
-                    ),
+                    
                     ActionButton(
                       label: 'Evoución\nMédica',
                       icon: CupertinoIcons.chart_bar,
@@ -117,7 +114,7 @@ class MedicDashboard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: AvisosListWidget(),
+                    child: AvisosListUserWidget(),
                   ),
                   
                 ],
